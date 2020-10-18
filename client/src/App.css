@@ -1,3 +1,22 @@
 .App {
   text-align: center;
 }
+
+.navigation{
+
+}
+
+.navigation>ul{
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+
+.navigation>ul>li{
+  padding: 20px;
+}
+
+.navigation>ul>li>a{
+  text-decoration: none;
+}
+

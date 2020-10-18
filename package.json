@@ -1,0 +1,22 @@
+{
+  "name": "hotel-chain",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Said313/hotel-chain.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Said313/hotel-chain/issues"
+  },
+  "homepage": "https://github.com/Said313/hotel-chain#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  }
+}

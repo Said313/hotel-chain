@@ -1,38 +1,55 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
+import Home from './routes/Home/Home';
+import Navigation from './components/Navigation/Navigation';
 
 import './App.css';
 
-const App = () => {
-  return (
-    <Router>
-      <div className="App">
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/about">Service 2</Link>
-            </li>
-            <li>
-              <Link to="/users">Service 1</Link>
-            </li>
-          </ul>
-        </nav>
+class App extends Component {
 
-        <Switch>
+  constructor(){
+    super();
+    this.state = {
+      isLogged: false,
+      userType: 'user',
+    }
+  }
 
-          <Route path="/">
-          </Route>
+  login = () => {
+    this.setState({
+      isLogged: true,
+      userType: "guest",
+    });
+  }
 
-          <Route path="/">
-          </Route>
+  logout = () => {
+    this.setState({
+      isLogged: false,
+      userType: "user",
+    });
+  }
 
-        </Switch>
-      </div>
-    </Router>
-  );
+  render(){
+    return (
+      <Router>
+        <div className="App">
+  
+          <Switch>
+            <Route exact path="/">
+              <Home state={this.state} login={this.login} logout={this.logout}/>
+            </Route>
+            <Route exact path="/service1">
+              <Home state={this.state} login={this.login} logout={this.logout}/>
+            </Route>
+            <Route exact path="/service2">
+              <Home state={this.state} login={this.login} logout={this.logout}/>
+            </Route>
+          </Switch>
+
+        </div>
+      </Router>
+    );
+  }
 }
 
 export default App;
