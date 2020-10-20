@@ -1,9 +1,9 @@
-#Hotel Chain App
+# Hotel Chain App
 
 This is Front-end part of Hotel Chain App.
 It was build using react, react router, axios.
 
-##How to launch production server
+## How to launch production server
 
 First, install node modules:
 ```bash
