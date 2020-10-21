@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-const Login = ({login}) => {
+const Login = ({state, logIn, handleLogin}) => {
 
     const history = useHistory();
 
@@ -11,17 +11,30 @@ const Login = ({login}) => {
                 <h3>Log in</h3>
                 <form onSubmit={(e)=>{
                     e.preventDefault();
-                    login(); 
+                    logIn();
                     history.push('/');
                 }}>
                     <div>
-                        <label htmlFor="login-email">Email: </label>
-                        <input type="text" id= "login-email" placeholder="Enter email"/>
+                        <label htmlFor="log-login">Login: </label>
+                        <input 
+                            type="text" 
+                            id= "log-login"
+                            value={state.log_login}
+                            onChange={handleLogin}
+                            name="log_login"
+                            placeholder="Enter login"
+                        />
                     </div>
-
                     <div>
-                        <label htmlFor="login-password">Password: </label>
-                        <input type="password" id="login-password" placeholder="Enter password"/>
+                        <label htmlFor="log-password">Password: </label>
+                        <input 
+                            type="password" 
+                            id="log-password"
+                            value={state.log_password}
+                            onChange={handleLogin}
+                            name="log_password"
+                            placeholder="Enter password"
+                        />
                     </div>
                     
                     <button type="submit">Log in</button>

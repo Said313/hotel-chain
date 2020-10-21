@@ -20,3 +20,10 @@
   text-decoration: none;
 }
 
+.valid_error{
+  color: red;
+}
+
+.hide{
+  display: none !important;
+}
