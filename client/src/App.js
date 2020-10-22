@@ -136,7 +136,7 @@ class App extends Component {
   }
 
   logIn = () => {
-    axios.post(`${serverPath}/services/login`, {
+    axios.post(`${serverPath}/services/auth/login`, {
         login: this.state.log_login,
         password: this.state.log_password,
       })
@@ -184,7 +184,7 @@ class App extends Component {
   }
 
   signUp = (form) => {
-      axios.post(`${serverPath}/services/items`, {
+      axios.post(`${serverPath}/services/auth/signup`, {
         firstname: form.querySelector('#firstname').value,
         lastname: form.querySelector('#lastname').value,
         password: form.querySelector('#password').value,
