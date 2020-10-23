@@ -22,14 +22,14 @@ public class SignupRequest {
 
 
         return new User(
-            json.getString("firstname"),
-            json.getString("lastname"),
-            json.getString("password"),
-            doc_type,
-            json.getString("id_number"),
-            json.getString("address"),
-            json.getString("mobile_phone"),
-            json.getString("home_phone")
+                json.getString("firstname"),
+                json.getString("lastname"),
+                json.getString("password"),
+                doc_type,
+                json.getString("id_number"),
+                json.getString("address"),
+                json.getString("mobile_phone"),
+                json.getString("home_phone")
         );
     }
 }

@@ -5,6 +5,12 @@ const Signup = ({state, signUp, handleChange}) => {
 
     const history = useHistory();
 
+    const errorMessage = (errorName) => {
+        return state.signErrors[errorName].length > 0 ? (
+            <p className="valid_error">{state.signErrors[errorName]}</p>
+        ) : "";
+    }
+
     return (
         <div>
             <h3>Sign up</h3>
@@ -23,7 +29,7 @@ const Signup = ({state, signUp, handleChange}) => {
                         onChange={handleChange}
                     />
                 </div>
-                <p id="firstname_error" className="valid_error hide">This field cannot be empty.</p>
+                {errorMessage('firstname')}
                 <div>
                     <label htmlFor="lastname">Lastname: </label>
                     <input 
@@ -34,7 +40,7 @@ const Signup = ({state, signUp, handleChange}) => {
                         onChange={handleChange}
                     />
                 </div>
-                <p id="lastname_error" className="valid_error hide">This field cannot be empty.</p>
+                {errorMessage('lastname')}
                 <div>
                     <label htmlFor="password">Password: </label>
                     <input 
@@ -45,10 +51,9 @@ const Signup = ({state, signUp, handleChange}) => {
                         onChange={handleChange}
                     />
                 </div>
-                <p id="password_error" className="valid_error hide">This field cannot be empty.</p>
-                <p id="password_length_error" className="valid_error hide">Password should contain at least 6 characters and digits.</p>
-                <p id="password_letter_error" className="valid_error hide">Password should contain at least 1 english letter.</p>
-                <p id="password_digit_error" className="valid_error hide">Password should contain at least 1 digit.</p>
+                {errorMessage('password1')}
+                {errorMessage('password2')}
+                {errorMessage('password3')}
                 <div>
                     <label htmlFor="repeat_password">Repeat Password: </label>
                     <input 
@@ -59,8 +64,7 @@ const Signup = ({state, signUp, handleChange}) => {
                         onChange={handleChange}
                     />
                 </div>
-                <p id="repeat_password_error" className="valid_error hide">This field cannot be empty.</p>
-                <p id="repeat_password_match_error" className="valid_error hide">Passwords do not match.</p>
+                {errorMessage('repeat_password')}
                 <p></p>
                 <div>
                     <label htmlFor="id_type" id="id_type">ID type: </label>
@@ -69,11 +73,12 @@ const Signup = ({state, signUp, handleChange}) => {
                         value={state.signInfo.id_type}
                         onChange={handleChange}
                     >
+                        <option value="">Choose ID Type</option>
                         <option value="us_passport">US passport</option>
                         <option value="driving_license">Driving license</option>
                     </select>
                 </div>
-                <p id="id_type_error" className="valid_error hide">This field cannot be empty.</p>
+                {errorMessage('id_type')}
                 <div>
                     <label htmlFor="id_number">ID Number: </label>
                     <input 
@@ -84,7 +89,7 @@ const Signup = ({state, signUp, handleChange}) => {
                         onChange={handleChange}
                     />
                 </div>
-                <p id="id_number_error" className="valid_error hide">This field cannot be empty.</p>
+                {errorMessage('id_number')}
                 <div>
                     <label htmlFor="address">Address: </label>
                     <input 
@@ -95,7 +100,7 @@ const Signup = ({state, signUp, handleChange}) => {
                         onChange={handleChange}
                     />
                 </div>
-                <p id="address_error" className="valid_error hide">This field cannot be empty.</p>
+                {errorMessage('address')}
                 <div>
                     <label htmlFor="mobile_phone">Mobile phone: </label>
                     <input 
@@ -106,7 +111,7 @@ const Signup = ({state, signUp, handleChange}) => {
                         onChange={handleChange}
                     />
                 </div>
-                <p id="mobile_phone_error" className="valid_error hide">This field cannot be empty.</p>
+                {errorMessage('mobile_phone')}
                 <div>
                     <label htmlFor="home_phone">Home phone: </label>
                     <input 
@@ -117,7 +122,7 @@ const Signup = ({state, signUp, handleChange}) => {
                         onChange={handleChange}
                     />
                 </div>
-                <p id="home_phone_error" className="valid_error hide">This field cannot be empty.</p>
+                {errorMessage('home_phone')}
                 <div>
                     <label htmlFor="category">Category: </label>
                     <div id="category">

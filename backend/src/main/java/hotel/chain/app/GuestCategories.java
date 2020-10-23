@@ -15,5 +15,4 @@ public enum GuestCategories {
     GuestCategories(String name){
         this.name = name;
     }
-
 }
