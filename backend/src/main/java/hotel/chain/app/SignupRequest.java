@@ -20,6 +20,7 @@ public class SignupRequest {
             case "driving_license": doc_type = Id_type.DRIVING_LICENSE;
         }*/
 
+
         return new User(
             json.getString("firstname"),
             json.getString("lastname"),
