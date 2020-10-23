@@ -5,13 +5,13 @@ public class User {
     public String lastname;
     public String login;
     public String password;
-    public String id_type;
+    public Id_type id_type;
     public String id_number;
     public String address;
     public String mobile_phone;
     public String home_phone;
-    
-    public User(String firstname, String lastname, String password, String id_type,
+
+    public User(String firstname, String lastname, String password, Id_type id_type,
                 String id_number, String address, String mobile_phone, String home_phone){
         this.firstname = firstname;
         this.lastname = lastname;
@@ -24,7 +24,7 @@ public class User {
         this.home_phone = home_phone;
 
     }
-    
+
     public User(User user){
         this.firstname = user.firstname;
         this.lastname = user.lastname;
@@ -36,7 +36,7 @@ public class User {
         this.mobile_phone = user.mobile_phone;
         this.home_phone = user.home_phone;
     }
-    
+
     @Override
     public String toString() {
         return "USER{"

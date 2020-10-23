@@ -13,11 +13,18 @@ public class SignupRequest {
     public User parseRequest() throws JSONException {
         JSONObject json = new JSONObject(request);
 
+        Id_type doc_type = Id_type.NOT_PROVIDED;
+        /*String id_type = json.getString("id_type");
+        switch (id_type){
+            case "us_passport": doc_type = Id_type.US_PASSPORT;
+            case "driving_license": doc_type = Id_type.DRIVING_LICENSE;
+        }*/
+
         return new User(
             json.getString("firstname"),
             json.getString("lastname"),
             json.getString("password"),
-            "id_type",
+            doc_type,
             json.getString("id_number"),
             json.getString("address"),
             json.getString("mobile_phone"),

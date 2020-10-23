@@ -5,5 +5,5 @@ public class DBConfigs {
     protected String dbPort = "3306";
     protected String dbLogin = "root";
     protected String dbPassword = "IronDragon1327";
-    protected String dbName = "mydb";
+    protected String dbName = "hotel";
 }

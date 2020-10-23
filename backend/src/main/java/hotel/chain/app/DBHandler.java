@@ -25,18 +25,17 @@ public class DBHandler extends DBConfigs{
 
     public void signUpUser(User user){
 
-        String insert = "INSERT INTO " + GuestsTableColumns.TABLE_NAME + "("
-                + GuestsTableColumns.FIRSTNAME + ","
-                + GuestsTableColumns.LASTNAME + ","
-                + GuestsTableColumns.LOGIN + ","
-                + GuestsTableColumns.PASSWORD + ","
-                + GuestsTableColumns.IDTYPE + ","
-                + GuestsTableColumns.IDNUMBER + ","
-                + GuestsTableColumns.ADDRESS + ","
-                + GuestsTableColumns.MOBILEPHONE + ","
-                + GuestsTableColumns.HOMEPHONE + ","
-                + GuestsTableColumns.CATEGORY + ")"
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        String insert = "INSERT INTO " + UsersTableColumns.TABLE_NAME + "("
+                + UsersTableColumns.FIRSTNAME + ","
+                + UsersTableColumns.LASTNAME + ","
+                + UsersTableColumns.LOGIN + ","
+                + UsersTableColumns.PASSWORD + ","
+                + UsersTableColumns.ID_TYPE + ","
+                + UsersTableColumns.ID_NUMBER + ","
+                + UsersTableColumns.ADDRESS + ","
+                + UsersTableColumns.MOBILE_PHONE + ","
+                + UsersTableColumns.HOME_PHONE + ")"
+                + "VALUES(?,?,?,?,?,?,?,?,?)";
 
         try
         {
@@ -45,12 +44,11 @@ public class DBHandler extends DBConfigs{
             ps.setString(2, user.lastname);
             ps.setString(3, user.login);
             ps.setString(4, user.password);
-            ps.setString(5, user.id_type);
+            ps.setInt(5, user.id_type.getId());
             ps.setString(6, user.id_number);
             ps.setString(7, user.address);
             ps.setString(8, user.mobile_phone);
             ps.setString(9, user.home_phone);
-            ps.setString(10, "user.category");
 
             ps.executeUpdate();
 

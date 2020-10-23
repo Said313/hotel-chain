@@ -40,3 +40,6 @@ Go to folder "backend".
 This is JAX-RS app. You can deploy it with Tomcat(preferred 9.0v). Path should be [http://localhost:8080/backend_war_exploded/](http://localhost:8080/backend_war_exploded/)
 
 This app works as API(Do not have Front-end part) but can handle requests from another server.
+
+If you encounter a ClassNotFoundException when accessing your database, you should download mysql-connector-java-8.0.21 (or later) and add it to project as a library.
+Also, do not forget to add a respective maven dependency.
