@@ -1,6 +1,6 @@
-package examplejaxrs;
+package hotel.chain.app;
 
-public abstract class User {
+public class User {
     public String firstname;
     public String lastname;
     public String login;
@@ -10,20 +10,19 @@ public abstract class User {
     public String address;
     public String mobile_phone;
     public String home_phone;
-    public String category;
     
-    public User(String firstname, String lastname, String login, String password, String id_type,
-                String id_number, String address, String mobile_phone, String home_phone, String category){
+    public User(String firstname, String lastname, String password, String id_type,
+                String id_number, String address, String mobile_phone, String home_phone){
         this.firstname = firstname;
         this.lastname = lastname;
-        this.login = login;
+        login = firstname.toLowerCase() + "." + lastname.toLowerCase();
         this.password = password;
         this.id_type = id_type;
         this.id_number = id_number;
         this.address = address;
         this.mobile_phone = mobile_phone;
         this.home_phone = home_phone;
-        this.category = category;
+
     }
     
     public User(User user){
@@ -36,12 +35,20 @@ public abstract class User {
         this.address = user.address;
         this.mobile_phone = user.mobile_phone;
         this.home_phone = user.home_phone;
-        this.category = user.category;
     }
     
     @Override
     public String toString() {
-        return firstname + lastname + login + password + id_type
-                + id_number + address + mobile_phone + home_phone + category;
+        return "USER{"
+                + "\nfirstname: " + firstname
+                + "\nlastname: " + lastname
+                + "\nlogin: " + login
+                + "\npassword: " + password
+                + "\nid_type: " + id_type
+                + "\nid_number: " + id_number
+                + "\naddress: " + address
+                + "\nmobile_phone: " + mobile_phone
+                + "\nhomephone: " + home_phone
+            + "\n}";
     }
 }

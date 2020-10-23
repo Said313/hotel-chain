@@ -1,4 +1,4 @@
-package examplejaxrs;
+package hotel.chain.app;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
@@ -12,7 +12,8 @@ public class DBHandler extends DBConfigs{
     public DBHandler() throws ClassNotFoundException, SQLException, NoSuchMethodException,
             IllegalAccessException, InvocationTargetException, InstantiationException {
 
-        String url = "jdbc:mysql://localhost/hotel?serverTimezone=Asia/Almaty"; //DBConfigs
+        //String url = "jdbc:mysql://localhost/hotel?serverTimezone=Asia/Almaty";
+        String url = "jdbc:mysql://" + dbHost + "/" + dbName + "?serverTimezone=Asia/Almaty";
         Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
 
         dbConnection = DriverManager.getConnection(url, dbLogin, dbPassword);
@@ -22,8 +23,7 @@ public class DBHandler extends DBConfigs{
         return dbConnection;
     }
 
-    public void signUpUser(String firstname, String lastname, String login, String password, String idtype,
-                             String idnumber, String address, String mobilephone, String homephone, String category){
+    public void signUpUser(User user){
 
         String insert = "INSERT INTO " + GuestsTableColumns.TABLE_NAME + "("
                 + GuestsTableColumns.FIRSTNAME + ","
@@ -40,17 +40,17 @@ public class DBHandler extends DBConfigs{
 
         try
         {
-            PreparedStatement ps = getDbConnection().prepareStatement(insert);
-            ps.setString(1, firstname);
-            ps.setString(2, lastname);
-            ps.setString(3, login);
-            ps.setString(4, password);
-            ps.setString(5, idtype);
-            ps.setString(6, idnumber);
-            ps.setString(7, address);
-            ps.setString(8, mobilephone);
-            ps.setString(9, homephone);
-            ps.setString(10, category);
+            PreparedStatement ps = dbConnection.prepareStatement(insert);
+            ps.setString(1, user.firstname);
+            ps.setString(2, user.lastname);
+            ps.setString(3, user.login);
+            ps.setString(4, user.password);
+            ps.setString(5, user.id_type);
+            ps.setString(6, user.id_number);
+            ps.setString(7, user.address);
+            ps.setString(8, user.mobile_phone);
+            ps.setString(9, user.home_phone);
+            ps.setString(10, "user.category");
 
             ps.executeUpdate();
 

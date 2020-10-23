@@ -1,4 +1,4 @@
-package examplejaxrs;
+package hotel.chain.app;
 
 public class GuestsTableColumns {
     public static final String TABLE_NAME = "guests";

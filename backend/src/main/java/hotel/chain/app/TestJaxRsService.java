@@ -1,4 +1,4 @@
-package examplejaxrs;
+package hotel.chain.app;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -11,8 +11,8 @@ public class TestJaxRsService {
     public User user;
 
     public TestJaxRsService(){
-        user = new User("Olzhas", "Jalmukhambetov", "olzhas.jalmukhambetov", "1234","Passport",
-                "0001", "Main Street, 12", "123456", "1234","None");
+        //user = new User("Olzhas", "Jalmukhambetov", "olzhas.jalmukhambetov", "1234","Passport",
+          //      "0001", "Main Street, 12", "123456", "1234","None");
     }
 
     @GET
