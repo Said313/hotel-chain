@@ -131,7 +131,7 @@ const Signup = ({state, signUp, handleChange}) => {
                         />
                         <label htmlFor="cat_military">Military</label>
                         <input 
-                            type="radio" 
+                            type="radio"
                             id="cat_vip"
                             value="vip"
                             checked={state.signInfo.category === "vip"}
