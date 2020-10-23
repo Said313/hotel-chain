@@ -1,4 +1,4 @@
-run# Hotel Chain App
+# Hotel Chain App
 
 This is Hotel Chain App.
 
