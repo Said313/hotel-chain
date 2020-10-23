@@ -19,6 +19,7 @@ const Home = ({state, logout}) => {
         } else {
             ret = (
                 <Fragment>
+                    <p>{state.user.firstname}</p>
                     <button onClick={()=>{
                         logout();
                         history.push('/');

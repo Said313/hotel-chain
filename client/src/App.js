@@ -97,15 +97,16 @@ class App extends Component {
       })
       .then(res => {
         this.setState({
-          email: '',
-          password: '',
+          user: res.data,
+          log_login: '',
+          log_password: '',
           isLogged: true,
         })
       })
       .catch((error)=>{
         this.setState({
-          email: '',
-          password: '',
+          log_login: '',
+          log_password: '',
           isLogged: false,
         })
         window.alert("Cannot access the server!");
@@ -143,6 +144,7 @@ class App extends Component {
         console.log(error);
       })
       .then((res)=>{
+        window.alert("You are signed up successfully!");
       });
     } else {
       window.alert("Not valid Sign Up!");
@@ -151,6 +153,7 @@ class App extends Component {
 
   logout = () => {
     this.setState({
+      user: {},
       isLogged: false,
     });
   }

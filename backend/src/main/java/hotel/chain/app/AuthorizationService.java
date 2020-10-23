@@ -69,6 +69,7 @@ public class AuthorizationService {
 	        
 	        if(vec.size()>0) {
 	        	json = gson.toJson(guest, Guest.class);
+	        	this.list.add(guest);
 	        	return Response.ok(json).build();
 	        }
 	        
@@ -83,7 +84,92 @@ public class AuthorizationService {
     @Path("/signup")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response signup(SignupRequest request){
-        return Response.ok().build();
+    public Response signUp(SignupRequest request){
+        String firstname = request.firstname;
+        String lastname = request.lastname;
+        String password = request.password;
+        String id_type = request.id_type;
+        String id_number = request.id_number;
+        String address = request.address;
+        String mobile_phone = request.mobile_phone;
+        String home_phone = request.home_phone;
+        String category = request.category;
+
+        User guest;
+        Gson gson = new Gson();
+
+        String createTable = "INSERT INTO products ("
+                + "Id INT PRIMARY KEY AUTO_INCREMENT, "
+                + "ProductName VARCHAR(20), "
+                + "Price INT)";
+
+        System.out.println(firstname);
+        String registerUser = "INSERT guests(firstname, lastname, login, password, idtype, idnumber, address, mobilephone, homephone) "
+                            + "Values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try {
+
+            DBHandler dbh = new DBHandler();
+            PreparedStatement ps = dbh.getDbConnection().prepareStatement(registerUser);
+            ps.setString(1, firstname);
+            ps.setString(2, lastname);
+            ps.setString(3, "login");
+            ps.setString(4, "password");
+            ps.setString(5, id_type);
+            ps.setString(6, id_number);
+            ps.setString(7, address);
+            ps.setString(8, mobile_phone);
+            ps.setString(9, home_phone);
+
+
+            ps.executeUpdate();
+
+        } catch (ClassNotFoundException
+                | InstantiationException
+                | InvocationTargetException
+                | IllegalAccessException
+                | NoSuchMethodException
+                | SQLException e) {
+
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+
+
+        /*String login = firstname + "." + lastname;
+
+        user = new User(firstname, lastname, login, password, id_type,
+                id_number, address, mobile_phone, home_phone, category);
+
+        DBHandler dbh = new DBHandler();
+
+        dbh.signUpUser(firstname, lastname, login, password, id_type,
+                id_number, address, mobile_phone, home_phone, category);
+        //dbh.signUpUser(user);*/
+
+
+        /*try{
+            String url = "jdbc:mysql://localhost/hotel?serverTimezone=Asia/Almaty";
+            String username = "root";
+            String password2 = "IronDragon1327";
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = DriverManager.getConnection(url, username, password2)){
+
+                System.out.println("Connection to Store DB succesfull!");
+            }
+        }
+        catch(Exception ex){
+            System.out.println("Connection failed...");
+
+            System.out.println(ex);
+        }*/
+
+        json = gson.toJson(guest, User.class);
+        return Response.ok(json).build();
     }
 }
