@@ -55,7 +55,7 @@ class App extends Component {
   }
 
   handleChange = (event) => {
-    const {value, name} = event.target.value;
+    const {value, name} = event.target;
     const {signInfo} = this.state;
 
     let pattern = /[\S]/
@@ -77,6 +77,7 @@ class App extends Component {
         break;
       default:
         errors[name] = value.match(pattern) ? "" : "This field cannot be empty.";
+        break;
     }
 
     this.setState((prevState)=>{
@@ -118,7 +119,7 @@ class App extends Component {
     const {signErrors} = this.state;
     let valid = true;
     Object.values(signErrors).forEach(
-      (value) => value.length > 0 && (valid = false)
+      (value) => value.length === 0 && (valid = false)
     );
 
     return valid;
