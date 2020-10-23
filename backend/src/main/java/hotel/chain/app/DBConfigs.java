@@ -1,4 +1,4 @@
-package examplejaxrs;
+package hotel.chain.app;
 
 public class DBConfigs {
     protected String dbHost = "localhost";
