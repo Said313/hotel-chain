@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import { useHistory } from 'react-router-dom';
 import Navigation from '../../components/Navigation/Navigation';
 
-const Home = ({state, login, logout}) => {
+const Home = ({state, logout}) => {
 
     const history = useHistory();
 
@@ -17,7 +17,14 @@ const Home = ({state, login, logout}) => {
                 </Fragment>
             );
         } else {
-            ret = '';
+            ret = (
+                <Fragment>
+                    <button onClick={()=>{
+                        logout();
+                        history.push('/');
+                    }}>Log out</button>
+                </Fragment>
+            );
         }
 
         return ret;
@@ -27,7 +34,7 @@ const Home = ({state, login, logout}) => {
         <main>
             <Navigation />
             {log()}
-            <h2>This is home page for {state.userType}!</h2>
+            <h2>This is home page!</h2>
             <p>{state.isLogged ? "You are logged in." : "Please, log in."}</p>
         </main>
     );

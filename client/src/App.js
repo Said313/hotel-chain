@@ -19,120 +19,75 @@ class App extends Component {
       log_password: '',
       signInfo: {
         firstname: '',
-        validfirstname: false,
         lastname: '',
-        validlastname: false,
         password: '',
-        validpassword: false,
         repeat_password: '',
-        validrepeat_password: true,
         id_type: '',
-        validid_type: false,
         id_number: '',
-        validid_number: false,
         address: '',
-        validaddress: false,
         mobile_phone: '',
-        validmobile_phone: false,
         home_phone: '',
-        validhome_phone: false,
         category: '',
+      },
+      signErrors: {
+        firstname: '',
+        lastname: '',
+        password1: '',
+        password2: '',
+        password3: '',
+        repeat_password: '',
+        id_type: '',
+        id_number: '',
+        address: '',
+        mobile_phone: '',
+        home_phone: '',
       },
     }
   }
 
   handleLogin = (event) => {
     const {name, value} = event.target;
+    let pattern = /[\S]/;
+
     this.setState({
       [name]: value,
     })
   }
 
   handleChange = (event) => {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
+    const {value, name} = event.target.value;
     const {signInfo} = this.state;
+
+    let pattern = /[\S]/
+    let passFirstPattern = /[a-zA-Z]/
+    let passSecondPattern = /[0-9]/
+
+    let errors = this.state.signErrors;
+    switch(name){
+      case "password":
+        errors.password1 = value.length < 6 ? "Password should contain at least 6 characters and digits." : "";
+        errors.password2 = value.match(passFirstPattern) ? "" : "Password should contain at least 1 english letter.";
+        errors.password3 = value.match(passSecondPattern) ? "" : "Password should contain at least 1 digit.";
+        errors.repeat_password = value !== signInfo.repeat_password ? "Passwords do not match." : "";
+        break;
+      case "repeat_password":
+        errors.repeat_password = value !== signInfo.password ? "Passwords do not match." : "";
+        break;
+      case "category":
+        break;
+      default:
+        errors[name] = value.match(pattern) ? "" : "This field cannot be empty.";
+    }
 
     this.setState((prevState)=>{
       return {
         signInfo: {
           ...prevState.signInfo,
           [name]: value,
-        }
+        },
+        signErrors: errors,
       }
     })
-
-    let pattern = /[\S]/
-    let passFirstPattern = /[a-zA-Z]/
-    let passSecondPattern = /[0-9]/
-
-    if(name !== "category"){
-      if(!value.match(pattern)){
-        document.querySelector(`#${name}_error`).classList.remove('hide');
-        this.setState((prevState)=>{
-          return {
-            signInfo: {
-              ...prevState.signInfo,
-              [`valid${name}`]: false,
-            }
-          }
-        })
-      } else {
-        document.querySelector(`#${name}_error`).classList.add('hide');
-        this.setState((prevState)=>{
-          return {
-            signInfo: {
-              ...prevState.signInfo,
-              [`valid${name}`]: true,
-            }
-          }
-        })
-      }
-    }
-
-    let validPass = true;
-
-    if(name === "password"){
-      if(value.length < 6){
-        document.querySelector(`#password_length_error`).classList.remove('hide');
-        validPass = false;
-      } else {
-        document.querySelector(`#password_length_error`).classList.add('hide');
-        validPass = true;
-      }
-      if(!value.match(passFirstPattern)){
-        document.querySelector(`#password_letter_error`).classList.remove('hide');
-        validPass = false;
-      } else {
-        document.querySelector(`#password_letter_error`).classList.add('hide');
-        validPass = true;
-      }
-      if(!value.match(passSecondPattern)){
-        document.querySelector(`#password_digit_error`).classList.remove('hide');
-        validPass = false;
-      } else {
-        document.querySelector(`#password_digit_error`).classList.add('hide');
-        validPass = true;
-      }
-    }
-
-    this.setState((prevState)=>{
-      return {
-        signInfo: {
-          ...prevState.signInfo,
-          validpassword: true,
-        }
-      }
-    })
-
-    if(name === "repeat_password"){
-      if(signInfo.password === value){
-        document.querySelector(`#repeat_password_match_error`).classList.add('hide');
-      } else {
-        document.querySelector(`#repeat_password_match_error`).classList.remove('hide');
-      }
-    }
   }
 
   logIn = () => {
@@ -159,42 +114,29 @@ class App extends Component {
   }
 
   checkSignUpValidity = () => {
-    const {
-      validfirstname,
-    validlastname,
-    validpassword,
-    validrepeat_password,
-    validid_type,
-    validid_number,
-    validaddress,
-    validmobile_phone,
-    validhome_phone
-    } = this.state.signInfo;
-
-    return (validfirstname &&
-    validlastname &&
-    validpassword &&
-    validrepeat_password &&
-    validid_type &&
-    validid_number &&
-    validaddress &&
-    validmobile_phone &&
-    validhome_phone
+    const {signErrors} = this.state;
+    let valid = true;
+    Object.values(signErrors).forEach(
+      (value) => value.length > 0 && (valid = false)
     );
+
+    return valid;
   }
 
-  signUp = (form) => {
+  signUp = () => {
+    if(this.checkSignUpValidity()){
+      const {signInfo} = this.state;
       axios.post(`${serverPath}/services/auth/signup`, {
-        firstname: form.querySelector('#firstname').value,
-        lastname: form.querySelector('#lastname').value,
-        password: form.querySelector('#password').value,
-        repeat_password: form.querySelector('#repeat_password').value,
-        id_type: form.querySelector('#id_type').value,
-        id_number: form.querySelector('#id_number').value,
-        address: form.querySelector('#address').value,
-        mobile_phone: form.querySelector('#mobile_phone').value,
-        home_phone: form.querySelector('#home_phone').value,
-        category: form.querySelector('#category').value,
+        firstname: signInfo.firstname,
+        lastname: signInfo.lastname,
+        password: signInfo.repeat_password,
+        repeat_password: signInfo.repeat_password,
+        id_type: signInfo.id_type,
+        id_number: signInfo.id_number,
+        address: signInfo.address,
+        mobile_phone: signInfo.mobile_phone,
+        home_phone: signInfo.home_phone,
+        category: signInfo.category,
       })
       .catch((error)=>{
         window.alert("Cannot access the server!");
@@ -202,12 +144,14 @@ class App extends Component {
       })
       .then((res)=>{
       });
+    } else {
+      window.alert("Not valid Sign Up!");
+    }
   }
 
   logout = () => {
     this.setState({
       isLogged: false,
-      userType: "user",
     });
   }
 
