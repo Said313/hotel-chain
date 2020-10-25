@@ -1,28 +1,18 @@
 package hotel.chain.app;
 
+import hotel.chain.app.constants.GuestCategories;
+import hotel.chain.app.constants.Id_type;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public class SignupRequest {
-<<<<<<< HEAD
-	public String firstname;
-	public String lastname;
-	public String password;
-	public String repeat_password;
-	public String id_type;
-	public String id_number;
-	public String address;
-	public String mobile_phone;
-	public String home_phone;
-	public String category;
-=======
     private String request;
 
     public SignupRequest(String request){
         this.request = request;
     }
 
-    public User parseRequest() throws JSONException {
+    public Guest parseRequest() throws JSONException {
         JSONObject json = new JSONObject(request);
 
         Id_type doc_type = Id_type.NOT_PROVIDED;
@@ -32,16 +22,24 @@ public class SignupRequest {
             case "driving_license": doc_type = Id_type.DRIVING_LICENSE;
         }*/
 
-        return new User(
-            json.getString("firstname"),
-            json.getString("lastname"),
-            json.getString("password"),
-            doc_type,
-            json.getString("id_number"),
-            json.getString("address"),
-            json.getString("mobile_phone"),
-            json.getString("home_phone")
+        GuestCategories gc = GuestCategories.NONE;
+        /*String category = json.getString("category");
+        switch (category){
+            case "military": gc = GuestCategories.MILITARY;
+            case "government": gc = GuestCategories.GOVERNMENT;
+            case "vip": gc = GuestCategories.VIP;
+        }*/
+
+        return new Guest(
+                json.getString("firstname"),
+                json.getString("lastname"),
+                json.getString("password"),
+                doc_type,
+                json.getString("id_number"),
+                json.getString("address"),
+                json.getString("mobile_phone"),
+                json.getString("home_phone"),
+                gc
         );
     }
->>>>>>> 62ffea518c603d7384ebfb39fb95133ad12c6083
 }
