@@ -1,7 +1,8 @@
-package hotel.chain.app;
+package hotel.chain.app.constants;
 
 public class UsersTableColumns {
     public static final String TABLE_NAME = "users";
+    public static final String ID = "id";
     public static final String FIRSTNAME = "firstname";
     public static final String LASTNAME = "lastname";
     public static final String LOGIN = "login";

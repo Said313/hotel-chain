@@ -1,5 +1,7 @@
 package hotel.chain.app;
 
+import hotel.chain.app.constants.Id_type;
+
 public class User {
     public String firstname;
     public String lastname;

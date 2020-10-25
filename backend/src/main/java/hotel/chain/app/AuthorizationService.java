@@ -82,14 +82,13 @@ public class AuthorizationService {
     @Path("/signup")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    //public Response signup(SignupRequest request){
     public Response signup(String request){
         SignupRequest sur = new SignupRequest(request);
 
         try{
-            User user = sur.parseRequest();
             DBHandler dbh = new DBHandler();
-            dbh.signUpUser(user);
+            Guest guest = sur.parseRequest();
+            dbh.signUpGuest(guest);
         } catch (ClassNotFoundException
                 | InstantiationException
                 | InvocationTargetException

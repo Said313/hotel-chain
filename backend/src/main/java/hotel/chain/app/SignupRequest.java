@@ -1,5 +1,7 @@
 package hotel.chain.app;
 
+import hotel.chain.app.constants.GuestCategories;
+import hotel.chain.app.constants.Id_type;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -10,7 +12,7 @@ public class SignupRequest {
         this.request = request;
     }
 
-    public User parseRequest() throws JSONException {
+    public Guest parseRequest() throws JSONException {
         JSONObject json = new JSONObject(request);
 
         Id_type doc_type = Id_type.NOT_PROVIDED;
@@ -20,8 +22,15 @@ public class SignupRequest {
             case "driving_license": doc_type = Id_type.DRIVING_LICENSE;
         }*/
 
+        GuestCategories gc = GuestCategories.NONE;
+        /*String category = json.getString("category");
+        switch (category){
+            case "military": gc = GuestCategories.MILITARY;
+            case "government": gc = GuestCategories.GOVERNMENT;
+            case "vip": gc = GuestCategories.VIP;
+        }*/
 
-        return new User(
+        return new Guest(
                 json.getString("firstname"),
                 json.getString("lastname"),
                 json.getString("password"),
@@ -29,7 +38,8 @@ public class SignupRequest {
                 json.getString("id_number"),
                 json.getString("address"),
                 json.getString("mobile_phone"),
-                json.getString("home_phone")
+                json.getString("home_phone"),
+                gc
         );
     }
 }
