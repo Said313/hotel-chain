@@ -15,7 +15,6 @@ const Signup = () => {
     }
 
     const onSubmit = formData => {
-        console.log(formData);
         axios.post(`${serverPath}/services/auth/signup`, {
             firstname: formData.firstname,
             lastname: formData.lastname,

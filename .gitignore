@@ -3,4 +3,4 @@ backend/.idea
 backend/target
 backend/backend.iml
 /.idea
-/package-lock.json
+/node_modules

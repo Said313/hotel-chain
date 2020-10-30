@@ -5,8 +5,12 @@ import Home from './routes/Home/Home';
 import Login from './routes/Auth/Login';
 import Signup from './routes/Auth/Signup';
 import serverPath from './api/path';
+import Navigation from './components/Navigation/Navigation';
+import Profile from './routes/Profile/Profile';
+import Booking from './routes/Booking/Booking';
 
 import './App.css';
+
 
 class App extends Component {
 
@@ -14,7 +18,9 @@ class App extends Component {
     super();
     this.state = {
       isLogged: false,
-      user: {},
+      user: {
+        type: "user",
+      },
     }
   }
 
@@ -22,7 +28,7 @@ class App extends Component {
     this.setState(data);
   }
 
-  logout = () => {
+  logOut = () => {
     this.setState({
       user: {},
       isLogged: false,
@@ -31,18 +37,18 @@ class App extends Component {
 
   render(){
     return (
-      <Router>
+      <Router basename="/backend_war_exploded">
         <div className="App">
-  
+          <Navigation state={this.state} logOut={this.logOut}/>
           <Switch>
             <Route exact path="/">
-              <Home state={this.state} login={this.login} logout={this.logout}/>
+              <Home state={this.state} login={this.login} logOut={this.logout}/>
             </Route>
-            <Route exact path="/service1">
-              <Home state={this.state} login={this.login} logout={this.logout}/>
+            <Route exact path="/booking">
+              <Booking />
             </Route>
-            <Route exact path="/service2">
-              <Home state={this.state} login={this.login} logout={this.logout}/>
+            <Route exact path="/profile">
+              <Profile />
             </Route>
             <Route exact path="/login">
               <Login handleLoginSubmit={this.handleLoginSubmit}/>
