@@ -7,20 +7,20 @@ const Navigation = ({state, logOut}) => {
     const log = () => {
         if(!state.isLogged){
             return (
-                <Fragment>
-                    <button onClick={()=>{history.push('/login')}}>Log in</button>
-                    <button onClick={()=>{history.push('/signup')}}>Sign up</button>
-                </Fragment>
+                <div>
+                    <button className="navButton" onClick={()=>{history.push('/login')}}>Log in</button>
+                    <button className="navButton" onClick={()=>{history.push('/signup')}}>Sign up</button>
+                </div>
             );
         } else {
             return (
-                <Fragment>
+                <div>
                     <p>{state.user.firstname}</p>
                     <button onClick={()=>{
                         logOut();
                         history.push('/');
                     }}>Log out</button>
-                </Fragment>
+                </div>
             );
         }
     }
@@ -39,8 +39,8 @@ const Navigation = ({state, logOut}) => {
                         <Link to="/profile">Profile</Link>
                     </li>
                 </ul>
+                {log()}
             </nav>
-            {log()}
         </div>
     );
 }

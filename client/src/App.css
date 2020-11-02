@@ -1,9 +1,13 @@
 .App {
-  text-align: center;
+  width: 100vw;
+  min-height: 100vh;
+  font-size: 18px;
 }
 
 .navigation{
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .navigation>ul{
@@ -20,10 +24,94 @@
   text-decoration: none;
 }
 
+.navigation>ul>li>a:visited{
+  color: blue;
+}
+
 .validError{
+  font-size: small;
   color: red;
 }
 
-.hide{
-  display: none !important;
+.Signup form div label {
+  width: 30vw;
+}
+
+.Signup form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.Signup, .Login {
+  margin: 20px 0px;
+}
+.Signup h3 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: x-large;
+}
+
+.Login div h3 {
+  text-align: center;
+  font-size: x-large;
+  margin-bottom: 15px;
+}
+
+.Login div form {
+  display: grid;
+  place-content: center;
+  place-items: center;
+}
+
+.signInput, .loginInput {
+  padding: 10px 15px;
+  font-size: medium;
+  border-width: 0px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  color: #000000;
+  border-style: solid;
+  border-radius: 12px;
+  box-shadow: 0px 0px 12px rgba(66,66,66,.50);
+  margin: 5px 0px;
+}
+
+.navButton, .signupButton, .loginButton {
+  font-size: medium;
+  padding: 10px 15px;
+  margin: 0px 5px;
+  border-radius: 10px;
+  border: 0px;
+  color: white;
+  cursor: pointer;
+  background-color: blue;
+}
+
+.signIdType {
+  margin: 15px 0px;
+}
+
+.signIdType select {
+  font-size: medium;
+}
+
+.signCategory {
+  margin: 20px 0px;
+}
+#category label {
+  margin-right: 10px;
+  line-height: 40px;
+}
+.loginButton {
+  margin: 10px 0px;
+}
+
+.toSignupText{
+  margin: 10px 0px;
+}
+
+.Booking, .Profile, .Home {
+  padding-top: 20px;
+  text-align: center;
 }

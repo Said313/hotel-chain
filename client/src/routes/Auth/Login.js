@@ -35,42 +35,39 @@ const Login = ({handleLoginSubmit}) => {
         logIn(formData);
     }
 
-    const ret = (
-        <div className="auth">
+    return (
+        <div className="Login">
             <div>
                 <h3>Log in</h3>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div>
-                        <label htmlFor="log-login">Login: </label>
                         <input 
                             type="text" 
-                            id= "logLogin"
+                            className="loginInput"
                             name="logLogin"
                             placeholder="Enter login"
+                            required
                             ref={register({required: true})}
                         />
                     </div>
-                    {errors.logLogin && <p className="validError">This field is required!</p>}
                     <div>
-                        <label htmlFor="log-password">Password: </label>
                         <input 
                             type="password" 
-                            id="logPassword"
+                            className="loginInput"
                             name="logPassword"
                             placeholder="Enter password"
+                            required
+                            minLength="6"
                             ref={register({required: true})}
                         />
                     </div>
-                    {errors.logPassword && <p className="validError">This field is required!</p>}
-                    <button type="submit">Log in</button>
-                    <p>Do not have an account?</p>
-                    <button onClick={()=>{history.push('/signup')}}>Sign up</button>
+                    <button className="loginButton" type="submit">Log in</button>
+                    <p className="toSignupText">Do not have an account?</p>
+                    <button className="signupButton" onClick={()=>{history.push('/signup')}}>Sign up</button>
                 </form>
             </div>
         </div>
-    );
-
-    return ret;
+    );;
 }
 
 export default Login;
