@@ -13,11 +13,11 @@ public class User {
     public String mobile_phone;
     public String home_phone;
 
-    public User(String firstname, String lastname, String password, Id_type id_type,
+    public User(String firstname, String lastname, String login, String password, Id_type id_type,
                 String id_number, String address, String mobile_phone, String home_phone){
         this.firstname = firstname;
         this.lastname = lastname;
-        login = firstname.toLowerCase() + "." + lastname.toLowerCase();
+        this.login = login;
         this.password = password;
         this.id_type = id_type;
         this.id_number = id_number;
@@ -37,6 +37,9 @@ public class User {
         this.address = user.address;
         this.mobile_phone = user.mobile_phone;
         this.home_phone = user.home_phone;
+    }
+
+    public User(){
     }
 
     @Override
