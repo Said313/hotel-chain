@@ -33,6 +33,7 @@ public class SignupRequest {
         return new Guest(
                 json.getString("firstname"),
                 json.getString("lastname"),
+                json.getString("login"),
                 json.getString("password"),
                 doc_type,
                 json.getString("id_number"),
@@ -41,5 +42,10 @@ public class SignupRequest {
                 json.getString("home_phone"),
                 gc
         );
+    }
+
+    public String parseLogin() throws JSONException {
+        JSONObject json = new JSONObject(request);
+        return json.getString("login");
     }
 }

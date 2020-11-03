@@ -103,4 +103,40 @@ public class AuthorizationService {
 
         return Response.ok().build();
     }
+
+    @POST
+    @Path("/checkLogin")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkLogin(String request){
+        SignupRequest sur = new SignupRequest(request);
+
+        User user = null;
+        boolean userExists = false;
+
+        try{
+            DBHandler dbh = new DBHandler();
+            String login = sur.parseLogin();
+            user = dbh.findUserByLogin(login);
+
+        } catch (ClassNotFoundException
+                | InstantiationException
+                | InvocationTargetException
+                | IllegalAccessException
+                | NoSuchMethodException
+                | SQLException
+                | JSONException e) {
+
+            e.printStackTrace();
+        }
+
+
+        if (user != null){
+            userExists = true;
+        }
+
+        Gson gson = new Gson();
+        String json = gson.toJson(userExists);
+        return Response.ok(json).build();
+    }
 }
