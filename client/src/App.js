@@ -8,6 +8,7 @@ import serverPath from './api/path';
 import Navigation from './components/Navigation/Navigation';
 import Profile from './routes/Profile/Profile';
 import Booking from './routes/Booking/Booking';
+import QueryResults from './routes/Booking/QueryResults';
 
 import './App.css';
 
@@ -21,6 +22,7 @@ class App extends Component {
       user: {
         type: "user",
       },
+      hotelsList: [],
     }
   }
 
@@ -35,6 +37,12 @@ class App extends Component {
     });
   }
 
+  setBookingQuery = (hotels) => {
+    this.setState({
+      hotelsList: hotels,
+    })
+  }
+
   render(){
     return (
       <Router basename="/backend_war_exploded">
@@ -45,7 +53,10 @@ class App extends Component {
               <Home state={this.state} login={this.login} logOut={this.logout}/>
             </Route>
             <Route exact path="/booking">
-              <Booking />
+              <Booking setBookingQuery={this.setBookingQuery}/>
+            </Route>
+            <Route exact path="/booking/hotels">
+              <QueryResults state={this.state}/>
             </Route>
             <Route exact path="/profile">
               <Profile />

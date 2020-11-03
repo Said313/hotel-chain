@@ -64,7 +64,7 @@
   place-items: center;
 }
 
-.signInput, .loginInput {
+.signInput, .loginInput, .dest {
   padding: 10px 15px;
   font-size: medium;
   border-width: 0px;
@@ -77,7 +77,7 @@
   margin: 5px 0px;
 }
 
-.navButton, .signupButton, .loginButton {
+.navButton, .signupButton, .loginButton, .findHotelsButton {
   font-size: medium;
   padding: 10px 15px;
   margin: 0px 5px;
@@ -103,7 +103,7 @@
   margin-right: 10px;
   line-height: 40px;
 }
-.loginButton {
+.loginButton, .findHotelsButton {
   margin: 10px 0px;
 }
 
@@ -111,7 +111,20 @@
   margin: 10px 0px;
 }
 
-.Booking, .Profile, .Home {
+.Booking, .Profile, .Home, .QueryResults {
   padding-top: 20px;
   text-align: center;
+}
+
+.Booking form label {
+  margin-left: 20px;
+}
+
+.dest {
+  margin: 10px;
+}
+
+.bookingDate {
+  margin: 10px;
+  padding: 5px;
 }

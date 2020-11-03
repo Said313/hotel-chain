@@ -16,7 +16,7 @@ const Signup = () => {
     }
 
     const handleLogin = ({target}) => {
-        axios.post(`${serverPath}/services/auth/signup/checkLogin`, {
+        axios.post(`${serverPath}/services/auth/checkLogin`, {
             login: target.value,
         })
             .then(res => {
