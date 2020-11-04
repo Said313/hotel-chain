@@ -1,4 +1,4 @@
-package hotel.chain.app.constants;
+package hotel.chain.app.constants.authorization;
 
 public enum GuestCategories {
     NONE("None", 1),

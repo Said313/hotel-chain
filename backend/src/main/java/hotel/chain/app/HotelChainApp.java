@@ -1,9 +1,7 @@
 package hotel.chain.app;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.SQLOutput;
+import hotel.chain.app.controllers.authorization.AuthorizationService;
+
 import java.util.HashSet;
 import java.util.Set;
 

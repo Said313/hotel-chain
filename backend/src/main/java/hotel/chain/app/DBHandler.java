@@ -1,21 +1,27 @@
 package hotel.chain.app;
 
 import hotel.chain.app.constants.*;
+import hotel.chain.app.constants.authorization.*;
+import hotel.chain.app.roles.Guest;
+import hotel.chain.app.roles.User;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DBHandler extends DBConfigs {
     private Connection dbConnection;
 
-    public DBHandler() throws ClassNotFoundException, SQLException, NoSuchMethodException,
-            IllegalAccessException, InvocationTargetException, InstantiationException {
+    public DBHandler(){
+        try{
+            String url = "jdbc:mysql://" + dbHost + "/" + dbName + "?serverTimezone=Asia/Almaty";
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            dbConnection = DriverManager.getConnection(url, dbLogin, dbPassword);
+        } catch (ClassNotFoundException | SQLException | NoSuchMethodException |
+                IllegalAccessException | InvocationTargetException | InstantiationException e){
 
-        //String url = "jdbc:mysql://localhost/hotel?serverTimezone=Asia/Almaty";
-        String url = "jdbc:mysql://" + dbHost + "/" + dbName + "?serverTimezone=Asia/Almaty";
-        Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-
-        dbConnection = DriverManager.getConnection(url, dbLogin, dbPassword);
+            e.printStackTrace();
+        }
     }
 
     public Connection getDbConnection(){
@@ -42,13 +48,10 @@ public class DBHandler extends DBConfigs {
                 + UsersTableColumns.LOGIN + " = ?";
 
         String insertGuest = "INSERT INTO " + GuestsTableColumns.TABLE_NAME + "("
-                + GuestsTableColumns.ID + ")"
-                + "VALUES(?)";
-
-        String setGuestCategory = "INSERT INTO " + GuestCategoryRelationships.TABLE_NAME + "("
-                + GuestCategoryRelationships.GUESTS_USER_id + ","
-                + GuestCategoryRelationships.GUEST_CATEGORIES_id + ")"
+                + GuestsTableColumns.ID + ","
+                + GuestsTableColumns.CATEGORY + ")"
                 + "VALUES(?,?)";
+
 
         try
         {
@@ -77,13 +80,9 @@ public class DBHandler extends DBConfigs {
 
             PreparedStatement psInsertGuest = dbConnection.prepareStatement(insertGuest);
                 psInsertGuest.setInt(1, guestID);
+                psInsertGuest.setInt(2, guest.category.getId());
             psInsertGuest.executeUpdate();
 
-
-            PreparedStatement psSetGuestCategory = dbConnection.prepareStatement(setGuestCategory);
-                psSetGuestCategory.setInt(1, guestID);
-                psSetGuestCategory.setInt(2, guest.category.getId());
-            psSetGuestCategory.executeUpdate();
 
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
@@ -116,15 +115,16 @@ public class DBHandler extends DBConfigs {
                     switch (id_type_int) {
                         case 1:
                             id_type = Id_type.US_PASSPORT;
+                            break;
                         case 2:
                             id_type = Id_type.DRIVING_LICENSE;
-                        case 3:
-                            id_type = Id_type.NOT_PROVIDED;
+                            break;
                         default:
                             id_type = Id_type.NOT_PROVIDED;
                     }
 
                     user = new User(
+                            rs.getInt(UsersTableColumns.ID),
                             rs.getString(UsersTableColumns.FIRSTNAME),
                             rs.getString(UsersTableColumns.LASTNAME),
                             rs.getString(UsersTableColumns.LOGIN),
@@ -139,8 +139,79 @@ public class DBHandler extends DBConfigs {
 
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            user = new User();
         }
 
         return user;
+    }
+
+
+
+
+
+
+    public Guest findGuestByLogin(String login){
+        User user = findUserByLogin(login);
+        Guest guest = null;
+        GuestCategories category = null;
+
+
+        String selectGuest = "SELECT * FROM " + GuestsTableColumns.TABLE_NAME + " WHERE "
+                + GuestsTableColumns.ID + " = ?";
+
+
+        try
+        {
+            PreparedStatement psSelectUser = dbConnection.prepareStatement(selectGuest);
+            psSelectUser.setInt(1, user.id);
+            ResultSet rs = psSelectUser.executeQuery();
+
+            if (rs.next()){
+                int cat = rs.getInt(GuestsTableColumns.CATEGORY);
+                switch (cat){
+                    case 2: category = GuestCategories.VIP;
+                        break;
+                    case 3: category = GuestCategories.GOVERNMENT;
+                        break;
+                    case 4: category = GuestCategories.MILITARY;
+                        break;
+                    default: category = GuestCategories.NONE;
+                }
+            }
+
+            guest = new Guest(user, category);
+
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            guest = new Guest();
+        }
+
+        return guest;
+    }
+
+
+
+
+
+
+
+
+
+    public ResultSet executeSelect(String query){
+
+        ResultSet rs = null;
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(query);
+            rs = ps.executeQuery();
+
+        } catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        return rs;
     }
 }
