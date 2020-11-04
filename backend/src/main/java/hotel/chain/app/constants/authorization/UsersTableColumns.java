@@ -1,4 +1,4 @@
-package hotel.chain.app.constants;
+package hotel.chain.app.constants.authorization;
 
 public class UsersTableColumns {
     public static final String TABLE_NAME = "users";

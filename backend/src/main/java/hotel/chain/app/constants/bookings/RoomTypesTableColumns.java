@@ -1,0 +1,10 @@
+package hotel.chain.app.constants.bookings;
+
+public class RoomTypesTableColumns {
+    public static final String TABLE_NAME = "room_types";
+    public static final String ID = "id";
+    public static final String SIZE = "size";
+    public static final String CAPACITY = "capacity";
+    public static final String HOTELS_ID = "HOTELS_id";
+    public static final String ROOM_TYPE_PRICE_FIXED = "RoomTypePriceFixed";
+}
