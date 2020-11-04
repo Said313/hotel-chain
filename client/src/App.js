@@ -59,7 +59,7 @@ class App extends Component {
               <QueryResults state={this.state}/>
             </Route>
             <Route exact path="/profile">
-              <Profile />
+              <Profile state={this.state}/>
             </Route>
             <Route exact path="/login">
               <Login handleLoginSubmit={this.handleLoginSubmit}/>

@@ -20,7 +20,7 @@ const Signup = () => {
             login: target.value,
         })
             .then(res => {
-                setValidLogin(res.data);
+                setValidLogin(!res.data);
             })
             .catch(error => {
                 window.alert("Cannot access the server!");
@@ -114,7 +114,8 @@ const Signup = () => {
                 {errors.repeatPassword && errors.repeatPassword.type === "confirmPassword" && errorMessage('Passwords do not match!')}
                 <div>
                     <input 
-                        type="text" 
+                        type="text"
+                        id="signLogin"
                         className="signInput"
                         name="signLogin"
                         placeholder="Login"
@@ -127,7 +128,6 @@ const Signup = () => {
                 <div>
                     <input 
                         type="text"
-                        id="signLogin"
                         className="signInput"
                         name="address"
                         placeholder="Address"

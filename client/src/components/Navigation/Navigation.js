@@ -1,8 +1,14 @@
 import React, { Fragment } from 'react';
 import {Link, useHistory} from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 const Navigation = ({state, logOut}) => {
     const history = useHistory();
+
+    const toProfile = () => {
+        history.push('/profile');
+    }
 
     const log = () => {
         if(!state.isLogged){
@@ -14,9 +20,9 @@ const Navigation = ({state, logOut}) => {
             );
         } else {
             return (
-                <div>
-                    <p>{state.user.firstname}</p>
-                    <button onClick={()=>{
+                <div className="navLoggedIn">
+                    <FontAwesomeIcon icon={faUserCircle} className="userIcon" onClick={toProfile}/>
+                    <button className="navButton" onClick={()=>{
                         logOut();
                         history.push('/');
                     }}>Log out</button>
@@ -35,9 +41,12 @@ const Navigation = ({state, logOut}) => {
                     <li>
                         <Link to="/booking">Booking</Link>
                     </li>
-                    <li>
-                        <Link to="/profile">Profile</Link>
-                    </li>
+
+                    {state.isLogged && 
+                        <li>
+                            <Link to="/profile">Profile</Link>
+                        </li>
+                    }
                 </ul>
                 {log()}
             </nav>
