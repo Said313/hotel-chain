@@ -1,17 +1,23 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import {Link, useHistory} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteUser, signOut } from '../../actions';
 
-const Navigation = ({state, logOut}) => {
+const Navigation = () => {
     const history = useHistory();
+
+    const isLogged = useSelector(state => state.isLogged);
+    const dispatch = useDispatch();
+
 
     const toProfile = () => {
         history.push('/profile');
     }
 
     const log = () => {
-        if(!state.isLogged){
+        if(!isLogged){
             return (
                 <div>
                     <button className="navButton" onClick={()=>{history.push('/login')}}>Log in</button>
@@ -23,7 +29,10 @@ const Navigation = ({state, logOut}) => {
                 <div className="navLoggedIn">
                     <FontAwesomeIcon icon={faUserCircle} className="userIcon" onClick={toProfile}/>
                     <button className="navButton" onClick={()=>{
-                        logOut();
+                        
+                        dispatch(signOut());
+                        dispatch(deleteUser());
+
                         history.push('/');
                     }}>Log out</button>
                 </div>
@@ -42,7 +51,7 @@ const Navigation = ({state, logOut}) => {
                         <Link to="/booking">Booking</Link>
                     </li>
 
-                    {state.isLogged && 
+                    {isLogged && 
                         <li>
                             <Link to="/profile">Profile</Link>
                         </li>

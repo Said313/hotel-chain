@@ -2,12 +2,17 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form'
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { signIn, setUser, deleteUser, signOut, signInAt } from '../../actions';
+
 
 import serverPath from '../../api/path';
 
-const Login = ({handleLoginSubmit}) => {
+const Login = () => {
 
+    const dispatch = useDispatch();
     const history = useHistory();
+
     const { register, errors, handleSubmit } = useForm();
     const [loginError, setLoginError] = useState("");
 
@@ -20,25 +25,24 @@ const Login = ({handleLoginSubmit}) => {
                 console.log(res.data);
                 console.log(Object.keys(res.data).length);
                 if(!(Object.keys(res.data).length === 0)){
-                    handleLoginSubmit({
-                        user: res.data,
-                        isLogged: true,
-                    });
+
+                    dispatch(signIn());
+                    dispatch(setUser(res.data));
+
                     setLoginError("");
                     history.push('/');
                 } else {
-                    handleLoginSubmit({
-                        user: {},
-                        isLogged: false,
-                    });
+
+                    dispatch(deleteUser());
+                    dispatch(signOut());
+
                     setLoginError("Invalid login or password!");
                 }
             })
             .catch((error)=>{
-                handleLoginSubmit({
-                    user: {},
-                    isLogged: false,
-                })
+                dispatch(deleteUser());
+                dispatch(signOut());
+                
                 window.alert("Cannot access the server!");
                 console.log(error);
              });

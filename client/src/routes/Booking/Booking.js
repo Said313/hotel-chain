@@ -2,10 +2,13 @@ import axios from 'axios';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import serverPath from '../../api/path';
+import { useDispatch } from 'react-redux';
+import { setHotelsList } from '../../actions';
 
 
-const Booking = ({setBookingQuery}) => {
+const Booking = () => {
     const history = useHistory();
+    const dispatch = useDispatch();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -19,7 +22,7 @@ const Booking = ({setBookingQuery}) => {
             end: endDate,
             })
             .then(res => {
-                setBookingQuery(res.data);
+                dispatch(setHotelsList());
                 history.push('/booking/hotels');
             })
             .catch(error => {

@@ -1,4 +1,4 @@
-const { src, dest } = require("gulp");
+const { src, dest, series } = require("gulp");
 const del = require('del');
 
 function copyFrontendFiles(){
@@ -13,4 +13,6 @@ function cleanWebAppFolder(){
 }
 
 exports.clean = cleanWebAppFolder;
-exports.default = copyFrontendFiles;
+exports.copy = copyFrontendFiles;
+
+exports.default = series(cleanWebAppFolder, copyFrontendFiles);

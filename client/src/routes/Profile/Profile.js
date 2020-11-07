@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { useSelector } from 'react-redux';
 
-const Profile = ({state : {user, isLogged}}) => {
-    const [pass, setPass] = useState("**********");
+const Profile = () => {
+    const isLogged = useSelector(state => state.isLogged);
+    const user = useSelector(state => state.user);
+    
+    const [pass, setPass] = useState("*".repeat(user.password.length));
 
     const toggleVisibility = () => {
         if(pass === user.password){
-            setPass("**********");
+            setPass("*".repeat(user.password.length));
         } else {
             setPass(user.password);
         }

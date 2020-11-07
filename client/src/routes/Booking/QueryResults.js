@@ -1,6 +1,8 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
-const QueryResults = ({state : {hotelsList}}) => {
+const QueryResults = () => {
+    const hotelsList = useSelector(state => state.hotelsList);
 
     return (
         <div className="QueryResults">
