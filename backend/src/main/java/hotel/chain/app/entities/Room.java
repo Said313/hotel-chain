@@ -1,22 +1,24 @@
-package hotel.chain.app.controllers.bookings;
+package hotel.chain.app.entities;
+
+import hotel.chain.app.entities.Booking;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Room {
-    public RoomType type;
+    public int id;
     public String number;
     public int floor;
     public boolean isClean;
     public boolean isOccupied;
     public ArrayList<Booking> bookings;
 
-    public Room(RoomType type, String number, int floor, boolean isClean, boolean isOccupied, ArrayList<Booking> bookings){
-        this.type = type;
+    public Room(int id, String number, int floor, boolean isClean, boolean isOccupied, ArrayList<Booking> bookings) {
+        this.id = id;
         this.number = number;
         this.floor = floor;
         this.isClean = isClean;
         this.isOccupied = isOccupied;
-        Collections.copy(this.bookings, bookings);
+        this.bookings = new ArrayList<>(bookings);
     }
 }

@@ -4,7 +4,8 @@ public enum BookingState {
 
     PAST("PAST", 1),
     CURRENT("CURRENT", 2),
-    COMING("COMING", 3);
+    COMING("COMING", 3),
+    NOSTATE("NOSTATE", 4);
 
     private String name;
     private int id;
@@ -17,4 +18,15 @@ public enum BookingState {
     public String getName(){return name;}
     public int getId(){return id;}
 
+    public static BookingState getBookingStateById(int id)
+    {
+        for (BookingState bs : BookingState.values())
+        {
+            if (bs.getId() == id)
+            {
+                return bs;
+            }
+        }
+        return NOSTATE;
+    }
 }

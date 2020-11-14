@@ -1,7 +1,5 @@
 package hotel.chain.app.controllers.authorization;
 
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -10,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
-import hotel.chain.app.DBHandler;
+import hotel.chain.app.database.AuthDBHandler;
 import hotel.chain.app.roles.Guest;
 import hotel.chain.app.roles.User;
 import org.codehaus.jettison.json.JSONException;
@@ -32,7 +30,7 @@ public class AuthorizationService {
         String login = lir.getLogin();
         String password = lir.getPassword();
 
-        DBHandler dbh = new DBHandler();
+        AuthDBHandler dbh = new AuthDBHandler();
         Guest guest = dbh.findGuestByLogin(login);
 
         if (password.equals(guest.password)) {
@@ -50,7 +48,7 @@ public class AuthorizationService {
     public Response signup(String request){
 
         SignupRequest sur = new SignupRequest(request);
-        DBHandler dbh = new DBHandler();
+        AuthDBHandler dbh = new AuthDBHandler();
         Guest guest = null;
 
         try{
@@ -80,7 +78,7 @@ public class AuthorizationService {
             e.printStackTrace();
         }
 
-        DBHandler dbh = new DBHandler();
+        AuthDBHandler dbh = new AuthDBHandler();
         user = dbh.findUserByLogin(login);
 
 

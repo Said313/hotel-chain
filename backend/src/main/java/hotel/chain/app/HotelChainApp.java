@@ -1,6 +1,7 @@
 package hotel.chain.app;
 
 import hotel.chain.app.controllers.authorization.AuthorizationService;
+import hotel.chain.app.controllers.bookings.BookingService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +17,7 @@ public class HotelChainApp extends Application {
 
     public HotelChainApp() {
         singletons.add(new AuthorizationService());
+        singletons.add(new BookingService());
     }
 
     @Override
