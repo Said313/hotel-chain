@@ -1,4 +1,4 @@
-package hotel.chain.app.controllers.bookings;
+package hotel.chain.app.entities;
 
 import java.util.Date;
 
@@ -16,6 +16,11 @@ public class Season {
         this.priceFactor = priceFactor;
         this.starts = starts;
         this.ends = ends;
+    }
+
+    @Override
+    public String toString() {
+        return season_name + "(" + id + ", " + priceFactor + "x ) [ " + starts + " - " + ends + " ]";
     }
 
 }

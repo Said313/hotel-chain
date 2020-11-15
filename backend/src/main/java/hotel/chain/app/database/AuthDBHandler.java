@@ -1,4 +1,4 @@
-package hotel.chain.app;
+package hotel.chain.app.database;
 
 import hotel.chain.app.constants.*;
 import hotel.chain.app.constants.authorization.*;
@@ -9,10 +9,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class DBHandler extends DBConfigs {
+public class AuthDBHandler extends DBConfigs {
     private Connection dbConnection;
 
-    public DBHandler(){
+    public AuthDBHandler(){
         try{
             String url = "jdbc:mysql://" + dbHost + "/" + dbName + "?serverTimezone=Asia/Almaty";
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();

@@ -1,4 +1,4 @@
-package hotel.chain.app.controllers.bookings;
+package hotel.chain.app.entities;
 
 public class RoomTypeFeature {
     public String name;
