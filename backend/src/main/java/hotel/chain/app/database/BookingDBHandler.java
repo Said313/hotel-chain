@@ -1,8 +1,9 @@
 package hotel.chain.app.database;
 
+import com.mysql.cj.jdbc.CallableStatement;
 import hotel.chain.app.constants.DBConfigs;
 import hotel.chain.app.constants.bookings.*;
-import hotel.chain.app.controllers.bookings.BookingRequest;
+import hotel.chain.app.controllers.bookings.BookingQueryParser;
 import hotel.chain.app.entities.Booking;
 import hotel.chain.app.entities.Hotel;
 import hotel.chain.app.entities.Room;
@@ -28,11 +29,46 @@ public class BookingDBHandler extends DBConfigs {
         }
     }
 
-    public ArrayList<Hotel> getAvailableHotels(BookingRequest br)
+    public void createBooking(int roomId, Booking booking)
     {
-        String dest = br.getDestination();
-        Date start = new Date(br.getStart().getTime());
-        Date end = new Date(br.getEnd().getTime());
+        String sql = "INSERT INTO " + BookingsTableColumns.TABLE_NAME + "("
+                + BookingsTableColumns.ROOMS_id + ", "
+                + BookingsTableColumns.GUESTS_USER_id + ", "
+                + BookingsTableColumns.CHECKIN + ", "
+                + BookingsTableColumns.CHECKOUT + ", "
+                + BookingsTableColumns.BILL + ")"
+                + "VALUES (?, ?, ?, ?, ?)";
+
+        PreparedStatement ps  = null;
+        try
+        {
+            ps = dbConnection.prepareStatement(sql);
+                ps.setInt(1, roomId);
+                ps.setInt(2, booking.guestId);
+                ps.setDate(3, new Date(booking.checkIn.getTime()));
+                ps.setDate(4, new Date(booking.checkout.getTime()));
+                ps.setFloat(5, booking.bill);
+            ps.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            try
+            {
+                dbConnection.close();
+                ps.close();
+            }
+            catch (SQLException | NullPointerException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public ArrayList<Hotel> getAvailableHotels(String dest, java.util.Date start, java.util.Date end)
+    {
         ArrayList<Hotel> hotels = new ArrayList<>();
 
         String selectHotels = "SELECT * FROM " + HotelsTableColumns.TABLE_NAME

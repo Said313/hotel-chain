@@ -25,4 +25,25 @@ public class RoomType {
         this.rooms = new ArrayList<>(rooms);
     }
 
+    public RoomType()
+    {
+        id = 0;
+        name = "empty";
+        size = 0;
+        capacity = 0;
+        fixedPrice = 0;
+        rooms = new ArrayList<>();
+    }
+
+    @Override
+    public String toString()
+    {
+        return "id: " + id
+                + ", name: " + name
+                + " size: " + size
+                + ", capacity: "
+                + ", fixedPrice: " + fixedPrice
+                + ", rooms: " + rooms.toString();
+    }
+
 }

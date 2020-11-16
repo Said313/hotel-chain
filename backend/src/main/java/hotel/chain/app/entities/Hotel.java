@@ -32,4 +32,39 @@ public class Hotel {
         this.city = city;
         this.description = description;
     }
+
+    public Hotel(){
+        id = 0;
+        name = "empty";
+        address = "empty";
+        city = "empty";
+        description = "empty";
+        roomTypes = new ArrayList<>();
+    }
+
+    @Override
+    public String toString()
+    {
+        return "id: " + id +
+                ", name: " + name +
+                ", address: " + address +
+                ", city: " + city +
+                ", description: " + description +
+                ", roomTypes: " + roomTypes.toString();
+
+    }
+
+    public RoomType getRoomTypeByName(String roomTypeName)
+    {
+        RoomType res = new RoomType();
+        for (RoomType roomType : roomTypes)
+        {
+            if (roomTypeName.equals(roomType.name))
+            {
+                res = roomType;
+            }
+        }
+
+        return res;
+    }
 }

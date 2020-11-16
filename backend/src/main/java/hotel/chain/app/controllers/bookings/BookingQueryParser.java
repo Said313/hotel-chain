@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class BookingRequest
+public class BookingQueryParser
 {
     private String request;
     private String destination;
@@ -15,11 +15,10 @@ public class BookingRequest
     private Date end;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-    public BookingRequest(String request){ this.request = request; }
+    public BookingQueryParser(String request){ this.request = request; }
 
     public void parse()
     {
-
         try
         {
             JSONObject json = new JSONObject(request);
