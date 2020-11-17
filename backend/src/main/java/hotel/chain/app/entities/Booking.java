@@ -10,17 +10,24 @@ public class Booking {
     public Season during;
     public Date checkIn;
     public Date checkout;
-    public BookingState state;
     public float bill;
 
     public Booking(int id, int guestId, //Season during,
-                    Date checkIn, Date checkout, BookingState state, float bill){
+                    Date checkIn, Date checkout, float bill){
         this.id = id;
         this.guestId = guestId;
         //this.during = during;
         this.checkIn = checkIn;
         this.checkout = checkout;
-        this.state = state;
+        this.bill = bill;
+    }
+
+    public Booking(int guestId, //Season during,
+                   Date checkIn, Date checkout, float bill){
+        this.guestId = guestId;
+        //this.during = during;
+        this.checkIn = checkIn;
+        this.checkout = checkout;
         this.bill = bill;
     }
 
@@ -28,6 +35,6 @@ public class Booking {
     public String toString(){
 
         return "id: " + id + ", guestId: " + guestId + ", during: " + during + ", checkIn: " + checkIn + ", checkOut: " +
-                checkout + ", state: " + state + ", bill: " + bill;
+                checkout + " bill: " + bill;
     }
 }

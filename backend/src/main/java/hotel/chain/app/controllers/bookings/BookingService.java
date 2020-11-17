@@ -2,8 +2,6 @@ package hotel.chain.app.controllers.bookings;
 
 import com.google.gson.Gson;
 import hotel.chain.app.constants.bookings.BookingState;
-import hotel.chain.app.constants.bookings.HotelsTableColumns;
-import hotel.chain.app.database.AuthDBHandler;
 import hotel.chain.app.database.BookingDBHandler;
 import hotel.chain.app.entities.Booking;
 import hotel.chain.app.entities.Hotel;
@@ -13,18 +11,58 @@ import hotel.chain.app.entities.RoomType;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.ArrayList;
 
 @Path("/booking")
 public class BookingService {
 
     private ArrayList<Hotel> hotels;
+    private String destination;
+    private Date start;
+    private Date end;
 
     public BookingService(){
         hotels = new ArrayList<>();
+    }
+
+    @POST
+    @Path("/create")
+    public Response createBooking(String request)
+    {
+        BookingCreateRequestParser parser = new BookingCreateRequestParser(request);
+        parser.parse();
+        String hotelName = parser.getHotelName();
+        ArrayList<RoomDemand> roomDemands = parser.getRoomDemands();
+        int guestId = parser.getGuestId();
+
+        ArrayList<Room> bookedRooms = new ArrayList<>();
+        Hotel hotel = getHotelByName(hotelName);
+        System.out.println(hotel);
+        for (RoomDemand roomDemand : roomDemands)
+        {
+            RoomType roomType = hotel.getRoomTypeByName(roomDemand.getRoomTypeName());
+            System.out.println(roomType);
+            for (int i=1;i<=roomDemand.getNumber();i++)
+            {
+                Room room = roomType.rooms.remove(0);
+                bookedRooms.add(room);
+
+                //Season during = hotel.getCurrentSeason();
+                float bill = issueBill();
+                Booking booking = new Booking(guestId, start, end, bill);
+                new BookingDBHandler().createBooking(room.id, booking);
+            }
+        }
+
+
+
+        Gson gson = new Gson();
+        return Response.ok(gson.toJson(bookedRooms)).build();
+    }
+
+    private float issueBill() {
+        return 0;
     }
 
     @POST
@@ -33,42 +71,32 @@ public class BookingService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAvailableHotels(String request)
     {
-        BookingRequest br = new BookingRequest(request);
+        BookingQueryParser br = new BookingQueryParser(request);
         br.parse();
+        destination = br.getDestination();
+        start = br.getStart();
+        end = br.getEnd();
 
         BookingDBHandler bdbh = new BookingDBHandler();
 
-        hotels = bdbh.getAvailableHotels(br);
+        hotels = bdbh.getAvailableHotels(destination, start, end);
         Gson gson = new Gson();
         return Response.ok(gson.toJson(hotels)).build();
     }
 
-
-    private ArrayList<Hotel> filterByDate(ArrayList<Hotel> hotels, Date start, Date end)
+    public Hotel getHotelByName(String name)
     {
-        ArrayList<Hotel> hotels_copy = new ArrayList<>(hotels);
-
-        for (Hotel hotel : hotels_copy)
+        Hotel res = new Hotel();
+        for (Hotel hotel : hotels)
         {
-            for (RoomType roomType : hotel.roomTypes)
+            if (name.equals(hotel.name))
             {
-                for (Room room : roomType.rooms)
-                {
-                    for (Booking booking : room.bookings)
-                    {
-                        if (booking.state == BookingState.CURRENT)
-                        {
-
-                        }
-                        else if (booking.state == BookingState.COMING)
-                        {
-
-                        }
-                    }
-                }
+                res = hotel;
             }
         }
 
-        return hotels_copy;
+        return res;
     }
+
+
 }
