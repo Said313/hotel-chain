@@ -1,6 +1,7 @@
 package hotel.chain.app.roles;
 
 import hotel.chain.app.constants.authorization.Id_type;
+import hotel.chain.app.constants.authorization.UserType;
 
 public class User {
     public int id;
@@ -13,9 +14,17 @@ public class User {
     public String address;
     public String mobile_phone;
     public String home_phone;
+    public UserType type;
 
     public User(int id, String firstname, String lastname, String login, String password, Id_type id_type,
-                String id_number, String address, String mobile_phone, String home_phone){
+                String id_number, String address, String mobile_phone, String home_phone, UserType type) {
+
+        this(firstname, lastname, login, password, id_type, id_number, address, mobile_phone, home_phone, type);
+        this.id = id;
+    }
+
+    public User(String firstname, String lastname, String login, String password, Id_type id_type,
+                String id_number, String address, String mobile_phone, String home_phone, UserType type){
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -26,6 +35,7 @@ public class User {
         this.address = address;
         this.mobile_phone = mobile_phone;
         this.home_phone = home_phone;
+        this.type = type;
 
     }
 
@@ -54,9 +64,21 @@ public class User {
         this.address = user.address;
         this.mobile_phone = user.mobile_phone;
         this.home_phone = user.home_phone;
+        
     }
 
     public User(){
+        id = 0;
+        firstname = "empty";
+        lastname = "empty";
+        login = "empty";
+        password = "empty";
+        id_type = Id_type.EMPTY;
+        id_number = "empty";
+        address = "empty";
+        mobile_phone = "empty";
+        home_phone = "empty";
+        type = UserType.EMPTY;
     }
 
     @Override
@@ -72,6 +94,7 @@ public class User {
                 + "\naddress: " + address
                 + "\nmobile_phone: " + mobile_phone
                 + "\nhomephone: " + home_phone
+                + "\ntype: " + type
             + "\n}";
     }
 }

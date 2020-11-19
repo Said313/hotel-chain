@@ -1,4 +1,4 @@
-package hotel.chain.app.constants;
+package hotel.chain.app.database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,4 +14,5 @@ public class DBConfigs {
     public static boolean isEmpty(ResultSet rs) throws SQLException {
         return (!rs.isBeforeFirst() && rs.getRow() == 0);
     }
+
 }
