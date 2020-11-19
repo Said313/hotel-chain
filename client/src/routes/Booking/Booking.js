@@ -22,7 +22,7 @@ const Booking = () => {
             end: endDate,
             })
             .then(res => {
-                dispatch(setHotelsList());
+                dispatch(setHotelsList(res.data));
                 history.push('/booking/hotels');
             })
             .catch(error => {
