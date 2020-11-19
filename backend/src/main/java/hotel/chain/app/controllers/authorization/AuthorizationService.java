@@ -70,9 +70,7 @@ public class AuthorizationService {
         User user = db.getUserByLogin(login);
         db.closeConnection();
 
-        System.out.println(user);
         boolean userExists = (user.type != UserType.EMPTY);
-        System.out.println(userExists);
 
         Gson gson = new Gson();
         String json = gson.toJson(userExists);

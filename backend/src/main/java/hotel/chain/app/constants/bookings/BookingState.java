@@ -2,31 +2,28 @@ package hotel.chain.app.constants.bookings;
 
 public enum BookingState {
 
-    PAST("PAST", 1),
-    CURRENT("CURRENT", 2),
-    COMING("COMING", 3),
-    NOSTATE("NOSTATE", 4);
+    EMPTY("empty"),
+    PAST("past"),
+    INCOMING("incoming"),
+    ALL("all");
 
     private String name;
-    private int id;
 
-    BookingState(String name, int id) {
+    BookingState(String name) {
         this.name = name;
-        this.id = id;
     };
 
     public String getName(){return name;}
-    public int getId(){return id;}
 
-    public static BookingState getBookingStateById(int id)
-    {
-        for (BookingState bs : BookingState.values())
-        {
-            if (bs.getId() == id)
-            {
-                return bs;
+    public static BookingState getByName(String name){
+
+        BookingState res = BookingState.EMPTY;
+        for (BookingState state : BookingState.values()){
+            if (name.equals(state.name)){
+                res = state;
             }
         }
-        return NOSTATE;
+        return res;
     }
+
 }

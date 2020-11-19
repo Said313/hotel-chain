@@ -1,6 +1,7 @@
 package hotel.chain.app.database;
 
 import hotel.chain.app.constants.bookings.*;
+import hotel.chain.app.entities.BookingForProfile;
 import hotel.chain.app.entities.Booking;
 import hotel.chain.app.entities.Hotel;
 import hotel.chain.app.entities.Room;
@@ -26,8 +27,15 @@ public class BookingDBHandler extends DBConfigs {
         }
     }
 
-    public void createBooking(int roomId, Booking booking)
-    {
+    public void closeConnection() {
+        try {
+            dbConnection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createBooking(int roomId, Booking booking) {
         String sql = "INSERT INTO " + BookingsTableColumns.TABLE_NAME + "("
                 + BookingsTableColumns.ROOMS_id + ", "
                 + BookingsTableColumns.GUESTS_USER_id + ", "
@@ -64,8 +72,7 @@ public class BookingDBHandler extends DBConfigs {
         }
     }
 
-    public ArrayList<Hotel> getAvailableHotels(String dest, java.util.Date start, java.util.Date end)
-    {
+    public ArrayList<Hotel> getAvailableHotels(String dest, java.util.Date start, java.util.Date end) {
         ArrayList<Hotel> hotels = new ArrayList<>();
 
         String selectHotels = "SELECT * FROM " + HotelsTableColumns.TABLE_NAME
@@ -184,7 +191,6 @@ public class BookingDBHandler extends DBConfigs {
         } finally {
 
             try {
-                dbConnection.close();
 
                 psBookings.close();
                 psHotel.close();
@@ -205,6 +211,79 @@ public class BookingDBHandler extends DBConfigs {
 
 
         return hotels;
+    }
+
+    public ArrayList<BookingForProfile> getBookingsOfAGuest(int guestId, BookingState bookingState){
+
+        ArrayList<BookingForProfile> bookings = new ArrayList<>();
+
+        String filterByBookingState = "";
+        switch (bookingState){
+            case PAST: filterByBookingState = " AND " + BookingsTableColumns.CHECKOUT + " < current_date()"; break;
+            case INCOMING: filterByBookingState = " AND " + BookingsTableColumns.CHECKOUT + " >= current_date()"; break;
+        }
+
+        //table names
+        String bookingsTN = BookingsTableColumns.TABLE_NAME;
+        String seasonsTN = SeasonsTableColumns.TABLE_NAME;
+        String roomsTN = RoomsTableColumns.TABLE_NAME;
+        String roomtypesTN = RoomTypesTableColumns.TABLE_NAME;
+        String hotelsTN = HotelsTableColumns.TABLE_NAME;
+
+        String sql = "SELECT "
+                            + bookingsTN + "." + BookingsTableColumns.CHECKIN + " , "
+                            + bookingsTN + "." + BookingsTableColumns.CHECKOUT + " , "
+                            + seasonsTN + "." + SeasonsTableColumns.SEASON_NAME + " , "
+                            + bookingsTN + "." + BookingsTableColumns.BILL + " , "
+                            + roomtypesTN + "." + RoomTypesTableColumns.NAME + " , "
+                            + hotelsTN + "." + HotelsTableColumns.NAME + " , "
+                            + hotelsTN + "." + HotelsTableColumns.ADDRESS + " , "
+                            + hotelsTN + "." + HotelsTableColumns.CITY + " , "
+                            + roomsTN + "." + RoomsTableColumns.NUMBER
+                    + " FROM "
+                            + BookingsTableColumns.TABLE_NAME + " , "
+                            + RoomsTableColumns.TABLE_NAME + " , "
+                            + RoomTypesTableColumns.TABLE_NAME + " , "
+                            + HotelsTableColumns.TABLE_NAME + " , "
+                            + SeasonsTableColumns.TABLE_NAME
+                    + " WHERE "
+                            + bookingsTN + "." + BookingsTableColumns.ROOMS_id + " = " + roomsTN + "." + RoomsTableColumns.ID + " AND "
+                            + roomsTN + "." + RoomsTableColumns.ID + " = " + roomtypesTN + "." + RoomTypesTableColumns.ID + " AND "
+                            + roomtypesTN + "." + RoomTypesTableColumns.HOTELS_ID + " = " + hotelsTN + "." + HotelsTableColumns.ID + " AND "
+                            + bookingsTN + "." + BookingsTableColumns.DURING + " = " + seasonsTN + "." + SeasonsTableColumns.ID + " AND "
+                            + bookingsTN + "." + BookingsTableColumns.GUESTS_USER_id + " = ? "
+                            + filterByBookingState
+                    + " ORDER BY "
+                            + bookingsTN + "." + BookingsTableColumns.CHECKIN;
+
+
+        try {
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setInt(1, guestId);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                BookingForProfile booking = new BookingForProfile(
+                                rs.getDate(bookingsTN + "." + BookingsTableColumns.CHECKIN),
+                                rs.getDate(bookingsTN + "." + BookingsTableColumns.CHECKOUT),
+                                rs.getString(seasonsTN + "." + SeasonsTableColumns.SEASON_NAME),
+                                rs.getFloat(bookingsTN + "." + BookingsTableColumns.BILL),
+                                rs.getString(roomtypesTN + "." + RoomTypesTableColumns.NAME),
+                                rs.getString(hotelsTN + "." + HotelsTableColumns.NAME),
+                                rs.getString(hotelsTN + "." + HotelsTableColumns.ADDRESS),
+                                rs.getString(hotelsTN + "." + HotelsTableColumns.CITY),
+                                rs.getString(roomsTN + "." + RoomsTableColumns.NUMBER)
+                        );
+
+                bookings.add(booking);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return bookings;
     }
 
 }
