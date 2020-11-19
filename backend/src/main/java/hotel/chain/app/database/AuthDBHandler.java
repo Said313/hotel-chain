@@ -156,7 +156,6 @@ public class AuthDBHandler extends DBConfigs {
         PreparedStatement psInsertGuest = null;
 
         try {
-
             psInsertGuest = dbConnection.prepareStatement(insertGuest);
                 psInsertGuest.setInt(1, id);
                 psInsertGuest.setInt(2, sur.getGuestCategory().getId());

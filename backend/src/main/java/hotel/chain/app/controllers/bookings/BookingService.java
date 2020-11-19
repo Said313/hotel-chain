@@ -48,7 +48,9 @@ public class BookingService {
                 //Season during = hotel.getCurrentSeason();
                 float bill = issueBill();
                 Booking booking = new Booking(guestId, start, end, bill);
-                new BookingDBHandler().createBooking(room.id, booking);
+                BookingDBHandler db = new BookingDBHandler();
+                db.createBooking(room.id, booking);
+                db.closeConnection();
             }
         }
 
