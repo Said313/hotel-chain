@@ -40,9 +40,10 @@ public class BookingCreateRequestParser {
 
         this.request = request;
         roomDemands = new ArrayList<>();
+        parse();
     }
 
-    public void parse()
+    private void parse()
     {
         try
         {

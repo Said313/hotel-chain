@@ -15,9 +15,12 @@ public class BookingQueryParser
     private Date end;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-    public BookingQueryParser(String request){ this.request = request; }
+    public BookingQueryParser(String request){
+        this.request = request;
+        parse();
+    }
 
-    public void parse()
+    private void parse()
     {
         try
         {

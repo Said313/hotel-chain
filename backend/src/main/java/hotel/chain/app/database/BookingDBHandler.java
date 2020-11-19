@@ -1,9 +1,6 @@
 package hotel.chain.app.database;
 
-import com.mysql.cj.jdbc.CallableStatement;
-import hotel.chain.app.constants.DBConfigs;
 import hotel.chain.app.constants.bookings.*;
-import hotel.chain.app.controllers.bookings.BookingQueryParser;
 import hotel.chain.app.entities.Booking;
 import hotel.chain.app.entities.Hotel;
 import hotel.chain.app.entities.Room;

@@ -1,7 +1,7 @@
 package hotel.chain.app.constants.bookings;
 
 public class SeasonsTableColumns {
-    public static final String TABLE_NAME = "seasons";
+    public static final String TABLE_NAME = "SEASONS";
     public static final String ID = "id";
     public static final String SEASON_NAME = "season_name";
     public static final String PRICE_FACTOR = "price_factor";

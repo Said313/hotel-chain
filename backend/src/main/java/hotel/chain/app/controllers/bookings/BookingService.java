@@ -31,18 +31,15 @@ public class BookingService {
     public Response createBooking(String request)
     {
         BookingCreateRequestParser parser = new BookingCreateRequestParser(request);
-        parser.parse();
         String hotelName = parser.getHotelName();
         ArrayList<RoomDemand> roomDemands = parser.getRoomDemands();
         int guestId = parser.getGuestId();
 
         ArrayList<Room> bookedRooms = new ArrayList<>();
         Hotel hotel = getHotelByName(hotelName);
-        System.out.println(hotel);
         for (RoomDemand roomDemand : roomDemands)
         {
             RoomType roomType = hotel.getRoomTypeByName(roomDemand.getRoomTypeName());
-            System.out.println(roomType);
             for (int i=1;i<=roomDemand.getNumber();i++)
             {
                 Room room = roomType.rooms.remove(0);
@@ -72,7 +69,6 @@ public class BookingService {
     public Response getAvailableHotels(String request)
     {
         BookingQueryParser br = new BookingQueryParser(request);
-        br.parse();
         destination = br.getDestination();
         start = br.getStart();
         end = br.getEnd();

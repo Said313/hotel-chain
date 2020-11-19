@@ -1,16 +1,16 @@
 package hotel.chain.app.database;
 
-import hotel.chain.app.constants.*;
 import hotel.chain.app.constants.authorization.*;
+import hotel.chain.app.controllers.authorization.SignupRequest;
 import hotel.chain.app.roles.Guest;
 import hotel.chain.app.roles.User;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
-import java.util.ArrayList;
 
 public class AuthDBHandler extends DBConfigs {
     private Connection dbConnection;
+    private SignupRequest sur;
 
     public AuthDBHandler(){
         try{
@@ -24,13 +24,79 @@ public class AuthDBHandler extends DBConfigs {
         }
     }
 
+    public void closeConnection() {
+        try {
+            dbConnection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Connection getDbConnection(){
         return dbConnection;
     }
 
-    public void signUpGuest(Guest guest){
+    public void signUp(SignupRequest sur){
 
-        User user = new User(guest);
+        this.sur = sur;
+        int id = signUpUser();
+
+        UserType userType = sur.getUserType();
+        switch (userType){
+            case GUEST: signUpGuest(id); break;
+            case MANAGER:
+            case DESK_CLERK:
+                signUpEmployee(id); break;
+        }
+
+
+    }
+
+    private void signUpEmployee(int userId) {
+
+        int hotelId = sur.getHotelId();
+
+        String insertEmployee = "INSERT INTO " + EmployeeTableColumns.TABLE_NAME + "("
+                + EmployeeTableColumns.ID + ","
+                + EmployeeTableColumns.HOTEL + ")"
+                + "VALUES(?,?)";
+
+        PreparedStatement psInsertEmployee = null;
+
+        try {
+            psInsertEmployee = dbConnection.prepareStatement(insertEmployee);
+            psInsertEmployee.setInt(1, userId);
+            psInsertEmployee.setInt(2, hotelId);
+            psInsertEmployee.executeUpdate();
+
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+
+        } finally {
+
+            try {
+                psInsertEmployee.close();
+
+            } catch (SQLException | NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public int signUpUser() {
+
+        User user = new User(
+                sur.getFirstname(),
+                sur.getLastname(),
+                sur.getLogin(),
+                sur.getPassword(),
+                sur.getId_type(),
+                sur.getId_number(),
+                sur.getAddress(),
+                sur.getMobile_phone(),
+                sur.getHome_phone(),
+                sur.getUserType()
+        );
 
         String insertUser = "INSERT INTO " + UsersTableColumns.TABLE_NAME + "("
                 + UsersTableColumns.FIRSTNAME + ","
@@ -41,21 +107,17 @@ public class AuthDBHandler extends DBConfigs {
                 + UsersTableColumns.ID_NUMBER + ","
                 + UsersTableColumns.ADDRESS + ","
                 + UsersTableColumns.MOBILE_PHONE + ","
-                + UsersTableColumns.HOME_PHONE + ")"
-                + "VALUES(?,?,?,?,?,?,?,?,?)";
+                + UsersTableColumns.HOME_PHONE + ","
+                + UsersTableColumns.TYPE + ")"
+                + "VALUES(?,?,?,?,?,?,?,?,?,?)";
 
-        String selectUser = "SELECT id FROM " + UsersTableColumns.TABLE_NAME + " WHERE "
-                + UsersTableColumns.LOGIN + " = ?";
-
-        String insertGuest = "INSERT INTO " + GuestsTableColumns.TABLE_NAME + "("
-                + GuestsTableColumns.ID + ","
-                + GuestsTableColumns.CATEGORY + ")"
-                + "VALUES(?,?)";
+        PreparedStatement psInsertUser = null;
 
 
-        try
-        {
-            PreparedStatement psInsertUser = dbConnection.prepareStatement(insertUser);
+
+        try {
+
+            psInsertUser = dbConnection.prepareStatement(insertUser);
                 psInsertUser.setString(1, user.firstname);
                 psInsertUser.setString(2, user.lastname);
                 psInsertUser.setString(3, user.login);
@@ -65,42 +127,61 @@ public class AuthDBHandler extends DBConfigs {
                 psInsertUser.setString(7, user.address);
                 psInsertUser.setString(8, user.mobile_phone);
                 psInsertUser.setString(9, user.home_phone);
+                psInsertUser.setInt(10, user.type.getId());
             psInsertUser.executeUpdate();
-
-
-            PreparedStatement psSelectUser = dbConnection.prepareStatement(selectUser);
-                psSelectUser.setString(1, user.login);
-            ResultSet rs = psSelectUser.executeQuery();
-
-            rs.next();
-            int userID = rs.getInt(UsersTableColumns.ID);
-            int guestID = userID;
-
-
-
-            PreparedStatement psInsertGuest = dbConnection.prepareStatement(insertGuest);
-                psInsertGuest.setInt(1, guestID);
-                psInsertGuest.setInt(2, guest.category.getId());
-            psInsertGuest.executeUpdate();
-
 
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
+
+        } finally {
+            try {
+                psInsertUser.close();
+
+            } catch (SQLException | NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return getUserByLogin(user.login).id;
+    }
+
+    public void signUpGuest(int id){
+
+
+        String insertGuest = "INSERT INTO " + GuestsTableColumns.TABLE_NAME + "("
+                + GuestsTableColumns.ID + ","
+                + GuestsTableColumns.CATEGORY + ")"
+                + "VALUES(?,?)";
+
+        PreparedStatement psInsertGuest = null;
+
+        try {
+
+            psInsertGuest = dbConnection.prepareStatement(insertGuest);
+                psInsertGuest.setInt(1, id);
+                psInsertGuest.setInt(2, sur.getGuestCategory().getId());
+            psInsertGuest.executeUpdate();
+
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+
+        } finally {
+
+            try {
+                psInsertGuest.close();
+
+            } catch (SQLException | NullPointerException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-
-
-
-
-
-
-    public User findUserByLogin(String login){
+    public User getUserByLogin(String login) {
 
         String selectUser = "SELECT * FROM " + UsersTableColumns.TABLE_NAME + " WHERE "
                 + UsersTableColumns.LOGIN + " = ?";
 
-        User user = null;
+        User user = new User();
 
         try
         {
@@ -108,98 +189,26 @@ public class AuthDBHandler extends DBConfigs {
                 psSelectUser.setString(1, login);
                 ResultSet rs = psSelectUser.executeQuery();
 
-                if (rs.next()) {
+            if (rs.next()) {
+                user.id = rs.getInt(UsersTableColumns.ID);
+                user.address = rs.getString(UsersTableColumns.ADDRESS);
+                user.firstname = rs.getString(UsersTableColumns.FIRSTNAME);
+                user.home_phone = rs.getString(UsersTableColumns.HOME_PHONE);
+                user.id_number = rs.getString(UsersTableColumns.ID_NUMBER);
+                user.id_type = Id_type.getByName(rs.getString(UsersTableColumns.ID_TYPE));
+                user.lastname = rs.getString(UsersTableColumns.LASTNAME);
+                user.login = rs.getString(UsersTableColumns.LOGIN);
+                user.mobile_phone = rs.getString(UsersTableColumns.MOBILE_PHONE);
+                user.password = rs.getString(UsersTableColumns.PASSWORD);
+                user.type = UserType.getById(rs.getInt(UsersTableColumns.TYPE));
+            }
 
-                    int id_type_int = rs.getInt(UsersTableColumns.ID_TYPE);
-                    Id_type id_type;
-                    switch (id_type_int) {
-                        case 1:
-                            id_type = Id_type.US_PASSPORT;
-                            break;
-                        case 2:
-                            id_type = Id_type.DRIVING_LICENSE;
-                            break;
-                        default:
-                            id_type = Id_type.NOT_PROVIDED;
-                    }
-
-                    user = new User(
-                            rs.getInt(UsersTableColumns.ID),
-                            rs.getString(UsersTableColumns.FIRSTNAME),
-                            rs.getString(UsersTableColumns.LASTNAME),
-                            rs.getString(UsersTableColumns.LOGIN),
-                            rs.getString(UsersTableColumns.PASSWORD),
-                            id_type,
-                            rs.getString(UsersTableColumns.ID_NUMBER),
-                            rs.getString(UsersTableColumns.ADDRESS),
-                            rs.getString(UsersTableColumns.MOBILE_PHONE),
-                            rs.getString(UsersTableColumns.HOME_PHONE)
-                    );
-                }
-
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
-        } catch (NullPointerException e) {
+        } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
-            user = new User();
         }
 
         return user;
     }
-
-
-
-
-
-
-    public Guest findGuestByLogin(String login){
-        User user = findUserByLogin(login);
-        Guest guest = null;
-        GuestCategories category = null;
-
-
-        String selectGuest = "SELECT * FROM " + GuestsTableColumns.TABLE_NAME + " WHERE "
-                + GuestsTableColumns.ID + " = ?";
-
-
-        try
-        {
-            PreparedStatement psSelectUser = dbConnection.prepareStatement(selectGuest);
-            psSelectUser.setInt(1, user.id);
-            ResultSet rs = psSelectUser.executeQuery();
-
-            if (rs.next()){
-                int cat = rs.getInt(GuestsTableColumns.CATEGORY);
-                switch (cat){
-                    case 2: category = GuestCategories.VIP;
-                        break;
-                    case 3: category = GuestCategories.GOVERNMENT;
-                        break;
-                    case 4: category = GuestCategories.MILITARY;
-                        break;
-                    default: category = GuestCategories.NONE;
-                }
-            }
-
-            guest = new Guest(user, category);
-
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            guest = new Guest();
-        }
-
-        return guest;
-    }
-
-
-
-
-
-
-
-
 
     public ResultSet executeSelect(String query){
 

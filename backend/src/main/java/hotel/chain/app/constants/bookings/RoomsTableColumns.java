@@ -1,7 +1,7 @@
 package hotel.chain.app.constants.bookings;
 
 public class RoomsTableColumns {
-    public static final String TABLE_NAME = "rooms";
+    public static final String TABLE_NAME = "ROOMS";
     public static final String ROOM_TYPE = "room_type";
     public static final String ID = "id";
     public static final String NUMBER = "number";
