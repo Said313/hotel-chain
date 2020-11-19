@@ -1,5 +1,6 @@
 package hotel.chain.app.controllers.authorization;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -8,6 +9,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
+import hotel.chain.app.constants.authorization.Id_type;
+import hotel.chain.app.constants.authorization.UserType;
 import hotel.chain.app.database.AuthDBHandler;
 import hotel.chain.app.roles.Guest;
 import hotel.chain.app.roles.User;
@@ -31,10 +34,11 @@ public class AuthorizationService {
         String password = lir.getPassword();
 
         AuthDBHandler dbh = new AuthDBHandler();
-        Guest guest = dbh.findGuestByLogin(login);
+        User user = dbh.getUserByLogin(login);
+        dbh.closeConnection();
 
-        if (password.equals(guest.password)) {
-            return Response.ok(guest).build();
+        if (password.equals(user.password)) {
+            return Response.ok(user).build();
         } else {
             return Response.ok().build();
         }
@@ -48,16 +52,9 @@ public class AuthorizationService {
     public Response signup(String request){
 
         SignupRequest sur = new SignupRequest(request);
-        AuthDBHandler dbh = new AuthDBHandler();
-        Guest guest = null;
-
-        try{
-            guest = sur.parseRequest();
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-
-        dbh.signUpGuest(guest);
+        AuthDBHandler db = new AuthDBHandler();
+        db.signUp(sur);
+        db.closeConnection();
 
         return Response.ok().build();
     }
@@ -68,31 +65,18 @@ public class AuthorizationService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkLogin(String request){
 
-        User user = null;
-        boolean userExists = false;
-        String login = null;
+        String login = new LoginRequest(request).getLogin();
+        AuthDBHandler db = new AuthDBHandler();
+        User user = db.getUserByLogin(login);
+        db.closeConnection();
 
-        try {
-            login = parseLogin(request);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-
-        AuthDBHandler dbh = new AuthDBHandler();
-        user = dbh.findUserByLogin(login);
-
-
-        if (user != null){
-            userExists = true;
-        }
+        System.out.println(user);
+        boolean userExists = (user.type != UserType.EMPTY);
+        System.out.println(userExists);
 
         Gson gson = new Gson();
         String json = gson.toJson(userExists);
         return Response.ok(json).build();
     }
 
-    public String parseLogin(String request) throws JSONException {
-        JSONObject json = new JSONObject(request);
-        return json.getString("login");
-    }
 }
