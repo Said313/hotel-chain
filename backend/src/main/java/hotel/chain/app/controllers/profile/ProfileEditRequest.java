@@ -47,6 +47,7 @@ public class ProfileEditRequest {
         try {
             JSONObject json = new JSONObject(request);
 
+            userId = json.getInt("userId");
             firstname = json.getString("firstname");
             lastname = json.getString("lastname");
             login = json.getString("login");
@@ -57,12 +58,8 @@ public class ProfileEditRequest {
             home_phone = json.getString("home_phone");
             id_type = Id_type.getByName(json.getString("id_type"));
             userType = UserType.getByName(json.getString("user_type"));
+            guestCategory = GuestCategories.getByName(json.getString("category"));
 
-            if (userType == UserType.GUEST){
-                guestCategory = GuestCategories.getByName(json.getString("category"));
-            } else {
-                guestCategory = GuestCategories.EMPTY;
-            }
 
 
         } catch (JSONException e) {
