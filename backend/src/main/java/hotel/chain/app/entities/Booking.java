@@ -12,20 +12,18 @@ public class Booking {
     public Date checkout;
     public float bill;
 
-    public Booking(int id, int guestId, //Season during,
-                    Date checkIn, Date checkout, float bill){
+    public Booking(int id, int guestId, Season during, Date checkIn, Date checkout, float bill){
         this.id = id;
         this.guestId = guestId;
-        //this.during = during;
+        this.during = during;
         this.checkIn = checkIn;
         this.checkout = checkout;
         this.bill = bill;
     }
 
-    public Booking(int guestId, //Season during,
-                   Date checkIn, Date checkout, float bill){
+    public Booking(int guestId, Season during, Date checkIn, Date checkout, float bill){
         this.guestId = guestId;
-        //this.during = during;
+        this.during = during;
         this.checkIn = checkIn;
         this.checkout = checkout;
         this.bill = bill;

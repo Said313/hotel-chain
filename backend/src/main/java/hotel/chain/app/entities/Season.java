@@ -1,6 +1,6 @@
 package hotel.chain.app.entities;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Season {
 
@@ -10,7 +10,7 @@ public class Season {
     public Date starts;
     public Date ends;
 
-    Season(int id, String season_name, float priceFactor, Date starts, Date ends){
+    public Season(int id, String season_name, Date starts, Date ends, float priceFactor){
         this.id = id;
         this.season_name = season_name;
         this.priceFactor = priceFactor;
@@ -18,10 +18,19 @@ public class Season {
         this.ends = ends;
     }
 
+    public Season() {
+        id = 0;
+        season_name = "empty";
+        priceFactor = 0;
+        starts = new Date(new java.util.Date().getTime());
+        ends = new Date(new java.util.Date().getTime());
+    }
+
     @Override
     public String toString() {
         return season_name + "(" + id + ", " + priceFactor + "x ) [ " + starts + " - " + ends + " ]";
     }
+
 
 }
 

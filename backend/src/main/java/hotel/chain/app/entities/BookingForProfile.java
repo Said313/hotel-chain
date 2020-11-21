@@ -3,6 +3,7 @@ package hotel.chain.app.entities;
 import java.sql.Date;
 
 public class BookingForProfile {
+    private int bookingId;
     private Date checkIn;
     private Date checkOut;
     private String name;
@@ -13,9 +14,10 @@ public class BookingForProfile {
     private String city;
     private String roomNumber;
     
-    public BookingForProfile(Date checkIn, Date checkOut, String name, float bill, String roomTypeName,
+    public BookingForProfile(int bookingId, Date checkIn, Date checkOut, String name, float bill, String roomTypeName,
                              String hotelName, String hotelAddress, String city, String roomNumber) {
 
+        this.bookingId = bookingId;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.name = name;

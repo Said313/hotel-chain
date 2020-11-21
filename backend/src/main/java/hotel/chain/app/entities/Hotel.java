@@ -1,5 +1,6 @@
 package hotel.chain.app.entities;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -13,15 +14,14 @@ public class Hotel {
     public ArrayList<Season> seasons;
 
     public Hotel(int id, String name, String address, String city, String description,
-                 ArrayList<RoomType> roomTypes){
-                //, ArrayList<Season> seasons){
+                 ArrayList<RoomType> roomTypes, ArrayList<Season> seasons){
         this.id = id;
         this.name = name;
         this.address = address;
         this.city = city;
         this.description = description;
         this.roomTypes = new ArrayList<>(roomTypes);
-        //this.seasons = new ArrayList<>(seasons);
+        this.seasons = new ArrayList<>(seasons);
     }
 
 
@@ -65,6 +65,18 @@ public class Hotel {
             }
         }
 
+        return res;
+    }
+
+    public Season getCurrentSeason() {
+
+        Season res = new Season();
+        Date now = new Date(new java.util.Date().getTime());
+        for (Season season : seasons){
+            if (season.starts.before(now) && season.ends.after(now)){
+                res = season;
+            }
+        }
         return res;
     }
 }

@@ -50,4 +50,30 @@ public class ProfileService {
 
         return Response.ok(gson.toJson(bookings)).build();
     }
+
+    @POST
+    @Path("/modifyBooking")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response modifyBooking(String request) {
+
+
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/cancelBooking")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cancelBooking(String request) {
+
+        BookingDBHandler db = new BookingDBHandler();
+        db.cancelBooking(new ProfileCancelBookingRequest(request).getBookingID());
+        db.closeConnection();
+        return Response.ok().build();
+    }
+
+
+
+
 }
