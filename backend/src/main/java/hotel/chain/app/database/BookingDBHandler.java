@@ -1,11 +1,7 @@
 package hotel.chain.app.database;
 
 import hotel.chain.app.constants.bookings.*;
-import hotel.chain.app.entities.BookingForProfile;
-import hotel.chain.app.entities.Booking;
-import hotel.chain.app.entities.Hotel;
-import hotel.chain.app.entities.Room;
-import hotel.chain.app.entities.RoomType;
+import hotel.chain.app.entities.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
@@ -89,15 +85,41 @@ public class BookingDBHandler extends DBConfigs {
                 "AND " + BookingsTableColumns.CHECKOUT + " > ? " +
                 "AND " + BookingsTableColumns.CHECKIN + " < ? ";
 
+        String selectSeasons =
+                "SELECT "
+                        + HotelsTableColumns.TABLE_NAME + "." + HotelsTableColumns.ID + ", "
+                        + SeasonsTableColumns.TABLE_NAME + "." + SeasonsTableColumns.ID + ", "
+                        + SeasonsTableColumns.TABLE_NAME + "." + SeasonsTableColumns.SEASON_NAME + ", "
+                        + SeasonsTableColumns.TABLE_NAME + "." + SeasonsTableColumns.STARTS + ", "
+                        + SeasonsTableColumns.TABLE_NAME + "." + SeasonsTableColumns.ENDS + ", "
+                        + SeasonsTableColumns.TABLE_NAME + "." + SeasonsTableColumns.PRICE_FACTOR + " " +
+                "FROM "
+                        + HotelsTableColumns.TABLE_NAME + ", "
+                        + HotelsHaveSeasonsTableColumns.TABLE_NAME + ", "
+                        + SeasonsTableColumns.TABLE_NAME + " " +
+                "WHERE "
+                        + HotelsTableColumns.TABLE_NAME + "." + HotelsTableColumns.ID
+                        + " = "
+                        + HotelsHaveSeasonsTableColumns.TABLE_NAME + "." + HotelsHaveSeasonsTableColumns.HOTELS_id + " " +
+                    "AND "
+                        + SeasonsTableColumns.TABLE_NAME + "." + SeasonsTableColumns.ID
+                        + " = "
+                        + HotelsHaveSeasonsTableColumns.TABLE_NAME + "." + HotelsHaveSeasonsTableColumns.SEASONS_id + " " +
+                    "AND "
+                        + HotelsTableColumns.TABLE_NAME + "." + HotelsTableColumns.ID + " = ?;";
+
+
         PreparedStatement psRoomType = null;
         PreparedStatement psRoom = null;
         PreparedStatement psBookings = null;
         PreparedStatement psHotel = null;
+        PreparedStatement psSeason = null;
 
         ResultSet rsHotel = null;
         ResultSet rsRoomTypes = null;
         ResultSet rsRooms = null;
         ResultSet rsBookings = null;
+        ResultSet rsSeasons = null;
 
         try {
             psHotel = dbConnection.prepareStatement(selectHotels);
@@ -106,6 +128,7 @@ public class BookingDBHandler extends DBConfigs {
             psRoomType = dbConnection.prepareStatement(selectRoomTypes);
             psRoom = dbConnection.prepareStatement(selectRooms);
             psBookings = dbConnection.prepareStatement(selectBookings);
+            psSeason = dbConnection.prepareStatement(selectSeasons);
 
 
             rsHotel = psHotel.executeQuery();
@@ -117,6 +140,24 @@ public class BookingDBHandler extends DBConfigs {
                 String address = rsHotel.getString(HotelsTableColumns.ADDRESS);
                 String city = rsHotel.getString(HotelsTableColumns.CITY);
                 String description = rsHotel.getString(HotelsTableColumns.DESCRIPTION);
+
+                psSeason.setInt(1, hotelid);
+                rsSeasons = psSeason.executeQuery();
+
+                ArrayList<Season> seasons = new ArrayList<>();
+
+                while (rsSeasons.next())
+                {
+                    Season season = new Season(
+                            rsSeasons.getInt(SeasonsTableColumns.ID),
+                            rsSeasons.getString(SeasonsTableColumns.SEASON_NAME),
+                            rsSeasons.getDate(SeasonsTableColumns.STARTS),
+                            rsSeasons.getDate(SeasonsTableColumns.ENDS),
+                            rsSeasons.getFloat(SeasonsTableColumns.PRICE_FACTOR)
+                    );
+
+                    seasons.add(season);
+                }
                 
                 ArrayList<RoomType> roomTypes = new ArrayList<>();
                 psRoomType.setInt(1, hotelid);
@@ -160,7 +201,7 @@ public class BookingDBHandler extends DBConfigs {
                     roomTypes.add(rt);
                 }
 
-                Hotel h = new Hotel(hotelid, hotelName, address, city, description, roomTypes);
+                Hotel h = new Hotel(hotelid, hotelName, address, city, description, roomTypes, seasons);
                 hotels.add(h);
             }
 
@@ -231,6 +272,7 @@ public class BookingDBHandler extends DBConfigs {
         String hotelsTN = HotelsTableColumns.TABLE_NAME;
 
         String sql = "SELECT "
+                            + bookingsTN + "." + BookingsTableColumns.ID + " , "
                             + bookingsTN + "." + BookingsTableColumns.CHECKIN + " , "
                             + bookingsTN + "." + BookingsTableColumns.CHECKOUT + " , "
                             + seasonsTN + "." + SeasonsTableColumns.SEASON_NAME + " , "
@@ -248,7 +290,7 @@ public class BookingDBHandler extends DBConfigs {
                             + SeasonsTableColumns.TABLE_NAME
                     + " WHERE "
                             + bookingsTN + "." + BookingsTableColumns.ROOMS_id + " = " + roomsTN + "." + RoomsTableColumns.ID + " AND "
-                            + roomsTN + "." + RoomsTableColumns.ID + " = " + roomtypesTN + "." + RoomTypesTableColumns.ID + " AND "
+                            + roomsTN + "." + RoomsTableColumns.ROOM_TYPE + " = " + roomtypesTN + "." + RoomTypesTableColumns.ID + " AND "
                             + roomtypesTN + "." + RoomTypesTableColumns.HOTELS_ID + " = " + hotelsTN + "." + HotelsTableColumns.ID + " AND "
                             + bookingsTN + "." + BookingsTableColumns.DURING + " = " + seasonsTN + "." + SeasonsTableColumns.ID + " AND "
                             + bookingsTN + "." + BookingsTableColumns.GUESTS_USER_id + " = ? "
@@ -260,10 +302,10 @@ public class BookingDBHandler extends DBConfigs {
         try {
             PreparedStatement ps = dbConnection.prepareStatement(sql);
             ps.setInt(1, guestId);
-
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 BookingForProfile booking = new BookingForProfile(
+                                rs.getInt(bookingsTN + "." + BookingsTableColumns.ID),
                                 rs.getDate(bookingsTN + "." + BookingsTableColumns.CHECKIN),
                                 rs.getDate(bookingsTN + "." + BookingsTableColumns.CHECKOUT),
                                 rs.getString(seasonsTN + "." + SeasonsTableColumns.SEASON_NAME),
@@ -285,5 +327,26 @@ public class BookingDBHandler extends DBConfigs {
 
         return bookings;
     }
+
+    public void cancelBooking(int bookingID) {
+
+        String sql = "DELETE FROM "
+                        + BookingsTableColumns.TABLE_NAME
+                    + " WHERE "
+                        + BookingsTableColumns.ID + " = ?";
+
+        PreparedStatement ps = null;
+
+        try {
+            ps = dbConnection.prepareStatement(sql);
+            ps.setInt(1, bookingID);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 }

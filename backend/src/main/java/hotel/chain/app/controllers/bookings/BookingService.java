@@ -3,10 +3,7 @@ package hotel.chain.app.controllers.bookings;
 import com.google.gson.Gson;
 import hotel.chain.app.constants.bookings.BookingState;
 import hotel.chain.app.database.BookingDBHandler;
-import hotel.chain.app.entities.Booking;
-import hotel.chain.app.entities.Hotel;
-import hotel.chain.app.entities.Room;
-import hotel.chain.app.entities.RoomType;
+import hotel.chain.app.entities.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -45,9 +42,9 @@ public class BookingService {
                 Room room = roomType.rooms.remove(0);
                 bookedRooms.add(room);
 
-                //Season during = hotel.getCurrentSeason();
+                Season during = hotel.getCurrentSeason();
                 float bill = issueBill();
-                Booking booking = new Booking(guestId, start, end, bill);
+                Booking booking = new Booking(guestId, during, start, end, bill);
                 BookingDBHandler db = new BookingDBHandler();
                 db.createBooking(room.id, booking);
                 db.closeConnection();

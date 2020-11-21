@@ -1,5 +1,6 @@
 package hotel.chain.app;
 
+import hotel.chain.app.controllers.admin.AdminService;
 import hotel.chain.app.controllers.authorization.AuthorizationService;
 import hotel.chain.app.controllers.bookings.BookingService;
 import hotel.chain.app.controllers.profile.ProfileService;
@@ -20,6 +21,7 @@ public class HotelChainApp extends Application {
         singletons.add(new AuthorizationService());
         singletons.add(new BookingService());
         singletons.add(new ProfileService());
+        singletons.add(new AdminService());
     }
 
     @Override
