@@ -32,24 +32,63 @@ public class BookingDBHandler extends DBConfigs {
     }
 
     public void createBooking(int roomId, Booking booking) {
-        String sql = "INSERT INTO " + BookingsTableColumns.TABLE_NAME + "("
+
+        String sqlBookings = "INSERT INTO " + BookingsTableColumns.TABLE_NAME + "("
                 + BookingsTableColumns.ROOMS_id + ", "
                 + BookingsTableColumns.GUESTS_USER_id + ", "
                 + BookingsTableColumns.CHECKIN + ", "
                 + BookingsTableColumns.CHECKOUT + ", "
-                + BookingsTableColumns.BILL + ")"
-                + "VALUES (?, ?, ?, ?, ?)";
+                + BookingsTableColumns.BILL + ", "
+                + BookingsTableColumns.DURING + ")"
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement ps  = null;
+
+        String sqlLastBookingID =
+                "SELECT "
+                    + "MAX(" + BookingsTableColumns.ID + ") "
+                + "FROM "
+                    + BookingsTableColumns.TABLE_NAME;
+
+        String sqlBookingsHaveAdditionalServices =
+                "INSERT INTO "
+                        + BookingsHaveAdditionalServicesTable.TABLE_NAME + "("
+                            + BookingsHaveAdditionalServicesTable.BOOKINGS_id + ", "
+                            + BookingsHaveAdditionalServicesTable.ADDITIONAL_SERVICES_id + " "
+                        + ") "
+                + "VALUES(?, ?)";
+
+
+
+        PreparedStatement psBookings  = null;
+        PreparedStatement psLastBookingID = null;
+        PreparedStatement psBookingsHaveAdditionalServices = null;
+
+        ResultSet rsLastBookingID = null;
+
         try
         {
-            ps = dbConnection.prepareStatement(sql);
-                ps.setInt(1, roomId);
-                ps.setInt(2, booking.guestId);
-                ps.setDate(3, new Date(booking.checkIn.getTime()));
-                ps.setDate(4, new Date(booking.checkout.getTime()));
-                ps.setFloat(5, booking.bill);
-            ps.executeUpdate();
+            psBookings = dbConnection.prepareStatement(sqlBookings);
+                psBookings.setInt(1, roomId);
+                psBookings.setInt(2, booking.guestId);
+                psBookings.setDate(3, new Date(booking.checkIn.getTime()));
+                psBookings.setDate(4, new Date(booking.checkout.getTime()));
+                psBookings.setFloat(5, booking.bill);
+                psBookings.setInt(6, booking.during.id);
+            psBookings.executeUpdate();
+
+            psLastBookingID = dbConnection.prepareStatement(sqlLastBookingID);
+            rsLastBookingID = psLastBookingID.executeQuery();
+            rsLastBookingID.next();
+            int lastBookingID = rsLastBookingID.getInt("MAX(" + BookingsTableColumns.ID + ")");
+
+            for (AdditionalService additionalService : booking.additionalServices)
+            {
+                psBookingsHaveAdditionalServices = dbConnection.prepareStatement(sqlBookingsHaveAdditionalServices);
+                    psBookingsHaveAdditionalServices.setInt(1, lastBookingID);
+                    psBookingsHaveAdditionalServices.setInt(2, additionalService.getServiceID());
+                psBookingsHaveAdditionalServices.executeUpdate();
+            }
+
         }
         catch (SQLException e)
         {
@@ -58,8 +97,10 @@ public class BookingDBHandler extends DBConfigs {
         finally {
             try
             {
-                dbConnection.close();
-                ps.close();
+                if (rsLastBookingID != null) {rsLastBookingID.close();}
+                if (psBookings!= null) {psBookings.close();}
+                if (psBookingsHaveAdditionalServices != null) {psBookingsHaveAdditionalServices.close();}
+                if (psLastBookingID != null) {psLastBookingID.close();}
             }
             catch (SQLException | NullPointerException e)
             {
@@ -108,18 +149,27 @@ public class BookingDBHandler extends DBConfigs {
                     "AND "
                         + HotelsTableColumns.TABLE_NAME + "." + HotelsTableColumns.ID + " = ?;";
 
+        String selectAdditionalServices =
+                "SELECT * "
+                + "FROM "
+                    + AdditionalServicesTableColumns.TABLE_NAME + " "
+                + "WHERE "
+                    + AdditionalServicesTableColumns.HOTELS_id + " = ?";
+
 
         PreparedStatement psRoomType = null;
         PreparedStatement psRoom = null;
         PreparedStatement psBookings = null;
         PreparedStatement psHotel = null;
         PreparedStatement psSeason = null;
+        PreparedStatement psAdditionalServices = null;
 
         ResultSet rsHotel = null;
         ResultSet rsRoomTypes = null;
         ResultSet rsRooms = null;
         ResultSet rsBookings = null;
         ResultSet rsSeasons = null;
+        ResultSet rsAdditionalServices = null;
 
         try {
             psHotel = dbConnection.prepareStatement(selectHotels);
@@ -129,6 +179,7 @@ public class BookingDBHandler extends DBConfigs {
             psRoom = dbConnection.prepareStatement(selectRooms);
             psBookings = dbConnection.prepareStatement(selectBookings);
             psSeason = dbConnection.prepareStatement(selectSeasons);
+            psAdditionalServices = dbConnection.prepareStatement(selectAdditionalServices);
 
 
             rsHotel = psHotel.executeQuery();
@@ -141,6 +192,21 @@ public class BookingDBHandler extends DBConfigs {
                 String city = rsHotel.getString(HotelsTableColumns.CITY);
                 String description = rsHotel.getString(HotelsTableColumns.DESCRIPTION);
 
+                psAdditionalServices.setInt(1, hotelid);
+                rsAdditionalServices = psAdditionalServices.executeQuery();
+
+                ArrayList<AdditionalService> additionalServices = new ArrayList<>();
+
+                while (rsAdditionalServices.next())
+                {
+                    AdditionalService additionalService = new AdditionalService(
+                            rsAdditionalServices.getInt(AdditionalServicesTableColumns.ID),
+                            rsAdditionalServices.getString(AdditionalServicesTableColumns.NAME),
+                            rsAdditionalServices.getFloat(AdditionalServicesTableColumns.PRICE)
+                    );
+                    additionalServices.add(additionalService);
+                }
+
                 psSeason.setInt(1, hotelid);
                 rsSeasons = psSeason.executeQuery();
 
@@ -149,7 +215,7 @@ public class BookingDBHandler extends DBConfigs {
                 while (rsSeasons.next())
                 {
                     Season season = new Season(
-                            rsSeasons.getInt(SeasonsTableColumns.ID),
+                            rsSeasons.getInt(SeasonsTableColumns.TABLE_NAME + "." + SeasonsTableColumns.ID),
                             rsSeasons.getString(SeasonsTableColumns.SEASON_NAME),
                             rsSeasons.getDate(SeasonsTableColumns.STARTS),
                             rsSeasons.getDate(SeasonsTableColumns.ENDS),
@@ -201,7 +267,7 @@ public class BookingDBHandler extends DBConfigs {
                     roomTypes.add(rt);
                 }
 
-                Hotel h = new Hotel(hotelid, hotelName, address, city, description, roomTypes, seasons);
+                Hotel h = new Hotel(hotelid, hotelName, address, city, description, roomTypes, seasons, additionalServices);
                 hotels.add(h);
             }
 
@@ -330,23 +396,42 @@ public class BookingDBHandler extends DBConfigs {
 
     public void cancelBooking(int bookingID) {
 
-        String sql = "DELETE FROM "
+        String sqlBookings = "DELETE FROM "
                         + BookingsTableColumns.TABLE_NAME
                     + " WHERE "
                         + BookingsTableColumns.ID + " = ?";
 
-        PreparedStatement ps = null;
+        String sqlBookingsHaveAdditionalServices =
+                "DELETE FROM "
+                    + BookingsHaveAdditionalServicesTable.TABLE_NAME + " "
+                + "WHERE "
+                    + BookingsHaveAdditionalServicesTable.BOOKINGS_id + " = ?";
+
+        PreparedStatement psBookings = null;
+        PreparedStatement psBookingsHaveAdditionalServices = null;
 
         try {
-            ps = dbConnection.prepareStatement(sql);
-            ps.setInt(1, bookingID);
-            ps.executeUpdate();
+            psBookingsHaveAdditionalServices = dbConnection.prepareStatement(sqlBookingsHaveAdditionalServices);
+            psBookingsHaveAdditionalServices.setInt(1, bookingID);
+            psBookingsHaveAdditionalServices.executeUpdate();
+
+            psBookings = dbConnection.prepareStatement(sqlBookings);
+            psBookings.setInt(1, bookingID);
+            psBookings.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (psBookings != null) { psBookings.close(); }
+                if (psBookingsHaveAdditionalServices != null ) { psBookingsHaveAdditionalServices.close(); }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
     }
+
 
 
 }

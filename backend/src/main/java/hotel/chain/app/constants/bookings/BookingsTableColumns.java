@@ -9,5 +9,4 @@ public class BookingsTableColumns {
     public static final String CHECKIN = "checkIn";
     public static final String CHECKOUT = "checkout";
     public static final String BILL = "bill";
-    public static final String IDBOOKING_STATES = "idBOOKING_STATES";
 }

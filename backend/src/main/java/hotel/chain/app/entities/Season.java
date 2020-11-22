@@ -21,7 +21,7 @@ public class Season {
     public Season() {
         id = 0;
         season_name = "empty";
-        priceFactor = 0;
+        priceFactor = 1;
         starts = new Date(new java.util.Date().getTime());
         ends = new Date(new java.util.Date().getTime());
     }
