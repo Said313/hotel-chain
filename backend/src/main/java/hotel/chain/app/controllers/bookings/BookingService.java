@@ -30,9 +30,12 @@ public class BookingService {
         BookingCreateRequestParser parser = new BookingCreateRequestParser(request);
         String hotelName = parser.getHotelName();
         ArrayList<RoomDemand> roomDemands = parser.getRoomDemands();
+        ArrayList<AdditionalService> additionalServices = parser.getAdditionalServices();
         int guestId = parser.getGuestId();
 
         ArrayList<Room> bookedRooms = new ArrayList<>();
+
+
         Hotel hotel = getHotelByName(hotelName);
         for (RoomDemand roomDemand : roomDemands)
         {
@@ -43,8 +46,14 @@ public class BookingService {
                 bookedRooms.add(room);
 
                 Season during = hotel.getCurrentSeason();
-                float bill = issueBill();
-                Booking booking = new Booking(guestId, during, start, end, bill);
+
+                float bill = roomType.fixedPrice;
+                for (AdditionalService as : additionalServices) {
+                    bill += as.getPrice();
+                }
+                bill *= during.priceFactor;
+
+                Booking booking = new Booking(guestId, during, start, end, bill, additionalServices);
                 BookingDBHandler db = new BookingDBHandler();
                 db.createBooking(room.id, booking);
                 db.closeConnection();
@@ -57,9 +66,8 @@ public class BookingService {
         return Response.ok(gson.toJson(bookedRooms)).build();
     }
 
-    private float issueBill() {
-        return 0;
-    }
+
+
 
     @POST
     @Path("/query")

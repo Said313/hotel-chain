@@ -1,7 +1,9 @@
 package hotel.chain.app.entities;
 
 import hotel.chain.app.constants.bookings.BookingState;
+import hotel.chain.app.controllers.bookings.BookingCreateRequestParser;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Booking {
@@ -11,23 +13,29 @@ public class Booking {
     public Date checkIn;
     public Date checkout;
     public float bill;
+    public ArrayList<AdditionalService> additionalServices;
 
-    public Booking(int id, int guestId, Season during, Date checkIn, Date checkout, float bill){
+    public Booking(int id, int guestId, Season during, Date checkIn, Date checkout,
+                   float bill, ArrayList<AdditionalService> additionalServices){
         this.id = id;
         this.guestId = guestId;
         this.during = during;
         this.checkIn = checkIn;
         this.checkout = checkout;
         this.bill = bill;
+        this.additionalServices = new ArrayList<>(additionalServices);
     }
 
-    public Booking(int guestId, Season during, Date checkIn, Date checkout, float bill){
+    public Booking(int guestId, Season during, Date checkIn, Date checkout,
+                   float bill, ArrayList<AdditionalService> additionalServices){
         this.guestId = guestId;
         this.during = during;
         this.checkIn = checkIn;
         this.checkout = checkout;
         this.bill = bill;
+        this.additionalServices = new ArrayList<>(additionalServices);
     }
+
 
     @Override
     public String toString(){

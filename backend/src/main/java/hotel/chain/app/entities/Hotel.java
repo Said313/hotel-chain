@@ -2,7 +2,6 @@ package hotel.chain.app.entities;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Hotel {
     public int id;
@@ -12,9 +11,11 @@ public class Hotel {
     public String description;
     public ArrayList<RoomType> roomTypes;
     public ArrayList<Season> seasons;
+    public ArrayList<AdditionalService> additionalServices;
 
     public Hotel(int id, String name, String address, String city, String description,
-                 ArrayList<RoomType> roomTypes, ArrayList<Season> seasons){
+                 ArrayList<RoomType> roomTypes, ArrayList<Season> seasons,
+                 ArrayList<AdditionalService> additionalServices){
         this.id = id;
         this.name = name;
         this.address = address;
@@ -22,6 +23,7 @@ public class Hotel {
         this.description = description;
         this.roomTypes = new ArrayList<>(roomTypes);
         this.seasons = new ArrayList<>(seasons);
+        this.additionalServices = new ArrayList<>(additionalServices);
     }
 
 
