@@ -2,13 +2,12 @@ package hotel.chain.app.database;
 
 import hotel.chain.app.constants.authorization.*;
 import hotel.chain.app.controllers.profile.ProfileEditRequest;
-import hotel.chain.app.roles.User;
+import hotel.chain.app.controllers.profile.ScheduleGetRequest;
+import hotel.chain.app.controllers.profile.ScheduleSetRequest;
+import hotel.chain.app.entities.Schedule;
 
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ProfileDBHandler extends DBConfigs{
 
@@ -112,6 +111,108 @@ public class ProfileDBHandler extends DBConfigs{
 
     }
 
+    public void setSchedule(ScheduleSetRequest parser) {
+
+        String sql =
+                "UPDATE "
+                    + ScheduleTableColumns.TABLE_NAME + " "
+                + "SET "
+                        + ScheduleTableColumns.MONDAY_START + " = ?, "
+                        + ScheduleTableColumns.MONDAY_END + " = ?, "
+                        + ScheduleTableColumns.TUESDAY_START + " = ?, "
+                        + ScheduleTableColumns.TUESDAY_END + " = ?, "
+                        + ScheduleTableColumns.WEDNESDAY_START + " = ?, "
+                        + ScheduleTableColumns.WEDNESDAY_END + " = ?, "
+                        + ScheduleTableColumns.THURSDAY_START + " = ?, "
+                        + ScheduleTableColumns.THURSDAY_END + " = ?, "
+                        + ScheduleTableColumns.FRIDAY_START + " = ?, "
+                        + ScheduleTableColumns.FRIDAY_END + " = ?, "
+                        + ScheduleTableColumns.SATURDAY_START + " = ?, "
+                        + ScheduleTableColumns.SATURDAY_END + " = ?, "
+                        + ScheduleTableColumns.SUNDAY_START + " = ?, "
+                        + ScheduleTableColumns.SUNDAY_END + " = ?, "
+                        + ScheduleTableColumns.PAYROLL + " = ? "
+                + "WHERE "
+                        + ScheduleTableColumns.EMPLOYEES_user_id + " = ?";
+
+        PreparedStatement ps = null;
+
+        try {
+            ps = dbConnection.prepareStatement(sql);
+                ps.setInt(1, parser.getUserID());
+                ps.setTime(1, parser.getMondayStart());
+                ps.setTime(2, parser.getMondayEnd());
+                ps.setTime(3, parser.getTuesdayStart());
+                ps.setTime(4, parser.getTuesdayEnd());
+                ps.setTime(5, parser.getWednesdayStart());
+                ps.setTime(6, parser.getWednesdayEnd());
+                ps.setTime(7, parser.getThursdayStart());
+                ps.setTime(8, parser.getThursdayEnd());
+                ps.setTime(9, parser.getFridayStart());
+                ps.setTime(10, parser.getFridayEnd());
+                ps.setTime(11, parser.getSaturdayStart());
+                ps.setTime(12, parser.getSaturdayEnd());
+                ps.setTime(13, parser.getSundayStart());
+                ps.setTime(14, parser.getSundayEnd());
+                ps.setFloat(15, parser.getPayroll());
+                ps.setInt(16, parser.getUserID());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Schedule getSchedule(ScheduleGetRequest parser) {
+
+        String sql =
+                "SELECT * FROM "
+                    + ScheduleTableColumns.TABLE_NAME + " "
+                + "WHERE "
+                    + ScheduleTableColumns.EMPLOYEES_user_id + " = ? ";
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Schedule schedule = new Schedule();
+
+        try {
+            ps = dbConnection.prepareStatement(sql);
+            ps.setInt(1, parser.getUserID());
+            System.out.println(ps);
+            rs = ps.executeQuery();
+            rs.next();
+
+            schedule = new Schedule(
+                    rs.getInt(ScheduleTableColumns.EMPLOYEES_user_id),
+                    rs.getTime(ScheduleTableColumns.MONDAY_START),
+                    rs.getTime(ScheduleTableColumns.MONDAY_END),
+                    rs.getTime(ScheduleTableColumns.TUESDAY_START),
+                    rs.getTime(ScheduleTableColumns.TUESDAY_END),
+                    rs.getTime(ScheduleTableColumns.WEDNESDAY_START),
+                    rs.getTime(ScheduleTableColumns.WEDNESDAY_END),
+                    rs.getTime(ScheduleTableColumns.THURSDAY_START),
+                    rs.getTime(ScheduleTableColumns.THURSDAY_END),
+                    rs.getTime(ScheduleTableColumns.FRIDAY_START),
+                    rs.getTime(ScheduleTableColumns.FRIDAY_END),
+                    rs.getTime(ScheduleTableColumns.SATURDAY_START),
+                    rs.getTime(ScheduleTableColumns.SATURDAY_END),
+                    rs.getTime(ScheduleTableColumns.SUNDAY_START),
+                    rs.getTime(ScheduleTableColumns.SUNDAY_END),
+                    rs.getFloat(ScheduleTableColumns.PAYROLL)
+            );
 
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {rs.close();}
+                if (ps != null) {ps.close();}
+            } catch (SQLException e ) {
+                e.printStackTrace();
+            }
+        }
+
+        return schedule;
+    }
 }

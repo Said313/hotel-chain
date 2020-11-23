@@ -61,7 +61,14 @@ public class AuthDBHandler extends DBConfigs {
                 + EmployeeTableColumns.HOTEL + ")"
                 + "VALUES(?,?)";
 
+        String insertSchedule = "INSERT INTO "
+                + ScheduleTableColumns.TABLE_NAME + "( "
+                    + ScheduleTableColumns.EMPLOYEES_user_id
+
+                                + ") VALUES(?)";
+
         PreparedStatement psInsertEmployee = null;
+        PreparedStatement psInsertSchedule = null;
 
         try {
             psInsertEmployee = dbConnection.prepareStatement(insertEmployee);
@@ -69,15 +76,21 @@ public class AuthDBHandler extends DBConfigs {
             psInsertEmployee.setInt(2, hotelId);
             psInsertEmployee.executeUpdate();
 
+            psInsertSchedule = dbConnection.prepareStatement(insertSchedule);
+            psInsertSchedule.setInt(1, userId);
+            System.out.println(psInsertSchedule);
+            psInsertSchedule.executeUpdate();
+
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
 
         } finally {
 
             try {
-                psInsertEmployee.close();
+                if (psInsertEmployee != null) {psInsertEmployee.close();}
+                if (psInsertSchedule != null) {psInsertSchedule.close();}
 
-            } catch (SQLException | NullPointerException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -201,6 +214,7 @@ public class AuthDBHandler extends DBConfigs {
                 user.password = rs.getString(UsersTableColumns.PASSWORD);
                 user.type = UserType.getById(rs.getInt(UsersTableColumns.TYPE));
             }
+
 
         } catch (SQLException | NullPointerException e) {
             e.printStackTrace();

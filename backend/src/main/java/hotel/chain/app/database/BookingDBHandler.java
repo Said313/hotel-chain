@@ -299,23 +299,21 @@ public class BookingDBHandler extends DBConfigs {
 
             try {
 
-                psBookings.close();
-                psHotel.close();
-                psRoom.close();
-                psRoomType.close();
+                if (psBookings != null) {psBookings.close();}
+                if (psHotel!=null) {psHotel.close();}
+                if (psRoom != null) {psRoom.close();}
+                if (psRoomType != null) {psRoomType.close();}
 
-                rsBookings.close();
-                rsHotel.close();
-                rsRooms.close();
-                rsRoomTypes.close();
+                if (rsBookings != null) {rsBookings.close();}
+                if (rsHotel!=null) {rsHotel.close();}
+                if (rsRooms!=null){rsRooms.close();}
+                if (rsRoomTypes!=null) {rsRoomTypes.close();}
 
             } catch (SQLException | NullPointerException e) {
                 e.printStackTrace();
             }
 
         }
-
-
 
         return hotels;
     }

@@ -25,7 +25,6 @@ public class User {
 
     public User(String firstname, String lastname, String login, String password, Id_type id_type,
                 String id_number, String address, String mobile_phone, String home_phone, UserType type){
-        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.login = login;
@@ -83,18 +82,17 @@ public class User {
 
     @Override
     public String toString() {
-        return "USER{"
-                + "\nid: " + id
-                + "\nfirstname: " + firstname
-                + "\nlastname: " + lastname
-                + "\nlogin: " + login
-                + "\npassword: " + password
-                + "\nid_type: " + id_type
-                + "\nid_number: " + id_number
-                + "\naddress: " + address
-                + "\nmobile_phone: " + mobile_phone
-                + "\nhomephone: " + home_phone
-                + "\ntype: " + type
-            + "\n}";
+        return
+                "id: " + id
+                + " firstname: " + firstname
+                + " lastname: " + lastname
+                + " login: " + login
+                + " password: " + password
+                + " id_type: " + id_type
+                + " id_number: " + id_number
+                + " address: " + address
+                + " mobile_phone: " + mobile_phone
+                + " homephone: " + home_phone
+                + " type: " + type;
     }
 }

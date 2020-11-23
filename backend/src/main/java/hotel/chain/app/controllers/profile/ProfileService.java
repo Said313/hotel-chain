@@ -5,6 +5,7 @@ import hotel.chain.app.constants.bookings.BookingState;
 import hotel.chain.app.database.BookingDBHandler;
 import hotel.chain.app.database.ProfileDBHandler;
 import hotel.chain.app.entities.BookingForProfile;
+import hotel.chain.app.entities.Schedule;
 import hotel.chain.app.roles.User;
 
 import javax.ws.rs.Consumes;
@@ -74,6 +75,30 @@ public class ProfileService {
     }
 
 
+    @POST
+    @Path("/setSchedule")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response setSchedule (String request) {
+
+        ScheduleSetRequest parser = new ScheduleSetRequest(request);
+        ProfileDBHandler db = new ProfileDBHandler();
+        db.setSchedule(parser);
+        db.closeConnection();
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/getSchedule")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSchedule (String request) {
+
+        ScheduleGetRequest parser = new ScheduleGetRequest(request);
+        ProfileDBHandler db = new ProfileDBHandler();
+        Schedule schedule = db.getSchedule(parser);
+        return Response.ok(new Gson().toJson(schedule)).build();
+    }
 
 
 }
