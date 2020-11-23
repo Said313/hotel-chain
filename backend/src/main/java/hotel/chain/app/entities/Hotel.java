@@ -70,12 +70,14 @@ public class Hotel {
         return res;
     }
 
-    public Season getCurrentSeason() {
+    public Season getSeason(Date start, Date end) {
 
         Season res = new Season();
-        Date now = new Date(new java.util.Date().getTime());
+        System.out.println(start);
+
         for (Season season : seasons){
-            if (season.starts.before(now) && season.ends.after(now)){
+            System.out.println(season);
+            if (season.starts.before(start) && season.ends.after(start) || season.starts.equals(start) || season.ends.equals(start)){
                 res = season;
             }
         }

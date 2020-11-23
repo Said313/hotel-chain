@@ -6,9 +6,9 @@ public class Season {
 
     public int id;
     public String season_name;
-    public float priceFactor;
     public Date starts;
     public Date ends;
+    public float priceFactor;
 
     public Season(int id, String season_name, Date starts, Date ends, float priceFactor){
         this.id = id;

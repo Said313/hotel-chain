@@ -6,6 +6,7 @@ import hotel.chain.app.controllers.profile.ScheduleGetRequest;
 import hotel.chain.app.database.AdminDBHandler;
 import hotel.chain.app.database.ProfileDBHandler;
 import hotel.chain.app.entities.Booking;
+import hotel.chain.app.entities.Room;
 import hotel.chain.app.roles.Employee;
 import hotel.chain.app.roles.User;
 
@@ -69,6 +70,7 @@ public class AdminService {
         db.closeConnection();
         return Response.ok(new Gson().toJson(employee)).build();
     }
+
 
 
 

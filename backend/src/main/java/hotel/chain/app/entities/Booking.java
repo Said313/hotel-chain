@@ -36,6 +36,16 @@ public class Booking {
         this.additionalServices = new ArrayList<>(additionalServices);
     }
 
+    public Booking() {
+        id = 0;
+        guestId = 0;
+        during = new Season();
+        checkIn = new Date();
+        checkout = new Date();
+        bill = 0;
+        additionalServices = new ArrayList<>();
+    }
+
 
     @Override
     public String toString(){
