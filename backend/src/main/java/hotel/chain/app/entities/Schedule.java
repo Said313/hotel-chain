@@ -62,4 +62,45 @@ public class Schedule {
         sundayEnd = new Time(new Date().getTime());
         payroll = 0;
     }
+    
+    public Schedule (Schedule schedule) {
+        this.userID = schedule.userID;
+        this.mondayStart = schedule.mondayStart;
+        this.mondayEnd = schedule.mondayEnd;
+        this.tuesdayStart = schedule.tuesdayStart;
+        this.tuesdayEnd = schedule.tuesdayEnd;
+        this.wednesdayStart = schedule.wednesdayStart;
+        this.wednesdayEnd = schedule.wednesdayEnd;
+        this.thursdayStart = schedule.thursdayStart;
+        this.thursdayEnd = schedule.thursdayEnd;
+        this.fridayStart = schedule.fridayStart;
+        this.fridayEnd = schedule.fridayEnd;
+        this.saturdayStart = schedule.saturdayStart;
+        this.saturdayEnd = schedule.saturdayEnd;
+        this.sundayStart = schedule.sundayStart;
+        this.sundayEnd = schedule.sundayEnd;
+        this.payroll = schedule.payroll;
+    }
+    
+    
+    @Override
+    public String toString() {
+        return
+            " userID : " + userID +
+            " ,mondayStart : " + mondayStart + 
+            " ,mondayEnd : " + mondayEnd + 
+            " ,tuesdayStart : " + tuesdayStart + 
+            " ,tuesdayEnd : " + tuesdayEnd +
+            " ,wednesdayStart : " + wednesdayStart + 
+            " ,wednesdayEnd : " + wednesdayEnd + 
+            " ,thursdayStart : " + thursdayStart +
+            " ,thursdayEnd : " + thursdayEnd +
+            " ,fridayStart : " + fridayStart + 
+            " ,fridayEnd : " + fridayEnd +
+            " ,saturdayStart : " + saturdayStart +
+            " ,saturdayEnd : " + saturdayEnd +
+            " ,sundayStart : " + sundayStart +
+            " ,sundayEnd : " + sundayEnd + 
+            " ,payroll : " + payroll;
+    }
 }

@@ -2,9 +2,11 @@ package hotel.chain.app.controllers.admin;
 
 import com.google.gson.Gson;
 import hotel.chain.app.controllers.profile.ProfileEditRequest;
+import hotel.chain.app.controllers.profile.ScheduleGetRequest;
 import hotel.chain.app.database.AdminDBHandler;
 import hotel.chain.app.database.ProfileDBHandler;
 import hotel.chain.app.entities.Booking;
+import hotel.chain.app.roles.Employee;
 import hotel.chain.app.roles.User;
 
 import javax.ws.rs.Consumes;
@@ -41,6 +43,33 @@ public class AdminService {
         users = db.getAllUsers();
         return Response.ok(new Gson().toJson(users)).build();
     }
+
+    @POST
+    @Path("/employees")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllEmployees(String request) {
+
+        AdminDBHandler db = new AdminDBHandler();
+        ArrayList<Employee> employees = new ArrayList<>();
+        employees = db.getAllEmployees();
+        db.closeConnection();
+        return Response.ok(new Gson().toJson(employees)).build();
+    }
+
+    @POST
+    @Path("/getEmployee")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getEmployee(String request) {
+
+        AdminDBHandler db = new AdminDBHandler();
+        ScheduleGetRequest parser = new ScheduleGetRequest(request);
+        Employee employee = db.getEmployee(parser);
+        db.closeConnection();
+        return Response.ok(new Gson().toJson(employee)).build();
+    }
+
 
 
 }
