@@ -45,7 +45,8 @@ public class BookingService {
                 Room room = roomType.rooms.remove(0);
                 bookedRooms.add(room);
 
-                Season during = hotel.getCurrentSeason();
+                Season during = hotel.getSeason(new java.sql.Date(start.getTime()), new java.sql.Date(end.getTime()));
+
 
                 float bill = roomType.fixedPrice;
                 for (AdditionalService as : additionalServices) {
@@ -65,8 +66,6 @@ public class BookingService {
         Gson gson = new Gson();
         return Response.ok(gson.toJson(bookedRooms)).build();
     }
-
-
 
 
     @POST
@@ -100,6 +99,21 @@ public class BookingService {
 
         return res;
     }
+
+
+    @POST
+    @Path("/checkout")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkout(String request){
+
+        CheckInOutRequest parser = new CheckInOutRequest(request);
+        BookingDBHandler db = new BookingDBHandler();
+        Receipt receipt = db.getReceipt(parser);
+        db.closeConnection();
+        return Response.ok(new Gson().toJson(receipt)).build();
+    }
+
 
 
 }

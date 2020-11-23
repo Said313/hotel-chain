@@ -1,6 +1,7 @@
 package hotel.chain.app.database;
 
 import hotel.chain.app.constants.bookings.*;
+import hotel.chain.app.controllers.bookings.CheckInOutRequest;
 import hotel.chain.app.entities.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -67,13 +68,22 @@ public class BookingDBHandler extends DBConfigs {
 
         try
         {
+            int seasonID;
+            if (booking.during.id == 0){
+                seasonID = defaultSeason();
+            } else {
+                seasonID = booking.during.id;
+            }
+
+
+
             psBookings = dbConnection.prepareStatement(sqlBookings);
                 psBookings.setInt(1, roomId);
                 psBookings.setInt(2, booking.guestId);
                 psBookings.setDate(3, new Date(booking.checkIn.getTime()));
                 psBookings.setDate(4, new Date(booking.checkout.getTime()));
                 psBookings.setFloat(5, booking.bill);
-                psBookings.setInt(6, booking.during.id);
+                psBookings.setInt(6, seasonID);
             psBookings.executeUpdate();
 
             psLastBookingID = dbConnection.prepareStatement(sqlLastBookingID);
@@ -431,5 +441,139 @@ public class BookingDBHandler extends DBConfigs {
     }
 
 
+    public Receipt getReceipt(CheckInOutRequest parser) {
 
+        Receipt receipt = new Receipt();
+
+        String sqlBooking =
+                "SELECT * FROM "
+                    + BookingsTableColumns.TABLE_NAME + ", "
+                    + RoomsTableColumns.TABLE_NAME + ", "
+                    + RoomTypesTableColumns.TABLE_NAME + " "
+                + "WHERE "
+                    + BookingsTableColumns.TABLE_NAME + "." + BookingsTableColumns.ROOMS_id
+                        + " = "
+                    + RoomsTableColumns.TABLE_NAME + "." + RoomsTableColumns.ID
+                + " AND "
+                    + RoomsTableColumns.TABLE_NAME + "." + RoomsTableColumns.ID
+                        + " = "
+                    + RoomTypesTableColumns.TABLE_NAME + "." + RoomTypesTableColumns.ID
+                + " AND "
+                    + BookingsTableColumns.TABLE_NAME + "." + BookingsTableColumns.DURING
+                        + " = "
+                    + SeasonsTableColumns.TABLE_NAME + "." + SeasonsTableColumns.ID
+                + " AND "
+                    + BookingsTableColumns.TABLE_NAME + "." + BookingsTableColumns.ID
+                        + " = ?";
+
+
+        String sqlAdditionalServices =
+                "SELECT * FROM "
+                    + BookingsHaveAdditionalServicesTable.TABLE_NAME + ", "
+                    + AdditionalServicesTableColumns.TABLE_NAME + " "
+                + "WHERE "
+                    + BookingsHaveAdditionalServicesTable.TABLE_NAME + "." + BookingsHaveAdditionalServicesTable.ADDITIONAL_SERVICES_id
+                        + " = "
+                    + AdditionalServicesTableColumns.TABLE_NAME + "." + AdditionalServicesTableColumns.ID
+                + " AND "
+                    + BookingsTableColumns.TABLE_NAME + "." + BookingsTableColumns.ID
+                        + " = ?";
+
+        PreparedStatement psBooking = null;
+        PreparedStatement psAdditionalServices = null;
+        ResultSet rsBooking = null;
+        ResultSet rsAdditionalServices = null;
+
+        try {
+            psAdditionalServices = dbConnection.prepareStatement(sqlAdditionalServices);
+            psAdditionalServices.setInt(1, parser.getBookingID());
+            rsAdditionalServices = psAdditionalServices.executeQuery();
+
+            ArrayList<AdditionalService> additionalServices = new ArrayList<>();
+            while (rsAdditionalServices.next()){
+                AdditionalService additionalService = new AdditionalService(
+                        rsAdditionalServices.getInt(AdditionalServicesTableColumns.TABLE_NAME + "." + AdditionalServicesTableColumns.ID),
+                        rsAdditionalServices.getString(AdditionalServicesTableColumns.TABLE_NAME + "." + AdditionalServicesTableColumns.NAME),
+                        rsAdditionalServices.getFloat(AdditionalServicesTableColumns.TABLE_NAME + "." + AdditionalServicesTableColumns.PRICE)
+                );
+
+                additionalServices.add(additionalService);
+            }
+
+
+            psBooking = dbConnection.prepareStatement(sqlBooking);
+            psBooking.setInt(1, parser.getBookingID());
+            rsBooking = psBooking.executeQuery();
+            rsBooking.next();
+
+            Season season = new Season(
+                    rsBooking.getInt(SeasonsTableColumns.TABLE_NAME + "." + SeasonsTableColumns.ID),
+                    rsBooking.getString(SeasonsTableColumns.TABLE_NAME + "." + SeasonsTableColumns.SEASON_NAME),
+                    rsBooking.getDate(SeasonsTableColumns.TABLE_NAME + "." + SeasonsTableColumns.STARTS),
+                    rsBooking.getDate(SeasonsTableColumns.TABLE_NAME + "." + SeasonsTableColumns.ENDS),
+                    rsBooking.getFloat(SeasonsTableColumns.TABLE_NAME + "." + SeasonsTableColumns.PRICE_FACTOR)
+                );
+
+            Booking booking = new Booking(
+                rsBooking.getInt(BookingsTableColumns.TABLE_NAME + "." + BookingsTableColumns.ID),
+                rsBooking.getInt(BookingsTableColumns.TABLE_NAME + "." + BookingsTableColumns.GUESTS_USER_id),
+                season,
+                rsBooking.getDate(BookingsTableColumns.TABLE_NAME + "." + BookingsTableColumns.CHECKIN),
+                rsBooking.getDate(BookingsTableColumns.TABLE_NAME + "." + BookingsTableColumns.CHECKOUT),
+                rsBooking.getFloat(BookingsTableColumns.TABLE_NAME + "." + BookingsTableColumns.BILL),
+                additionalServices
+            );
+
+            //receipt = new Receipt(booking, roomType);
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rsBooking != null) {rsBooking.close();}
+                if (psBooking != null) {psBooking.close();}
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return receipt;
+    }
+
+
+    public int defaultSeason(){
+
+        String sql =
+                "SELECT "
+                    + SeasonsTableColumns.ID + " " +
+                "FROM "
+                    + SeasonsTableColumns.TABLE_NAME + " " +
+                "WHERE "
+                    + SeasonsTableColumns.SEASON_NAME + " = ?";
+
+        int res = 1;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = dbConnection.prepareStatement(sql);
+            ps.setString(1, "no season");
+            rs = ps.executeQuery();
+            rs.next();
+
+            res = rs.getInt(SeasonsTableColumns.ID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {rs.close();}
+                if (ps != null) {ps.close();}
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return res;
+    }
 }

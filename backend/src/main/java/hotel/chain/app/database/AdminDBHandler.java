@@ -6,10 +6,7 @@ import hotel.chain.app.constants.bookings.BookingsHaveAdditionalServicesTable;
 import hotel.chain.app.constants.bookings.BookingsTableColumns;
 import hotel.chain.app.constants.bookings.SeasonsTableColumns;
 import hotel.chain.app.controllers.profile.ScheduleGetRequest;
-import hotel.chain.app.entities.AdditionalService;
-import hotel.chain.app.entities.Booking;
-import hotel.chain.app.entities.Schedule;
-import hotel.chain.app.entities.Season;
+import hotel.chain.app.entities.*;
 import hotel.chain.app.roles.Employee;
 import hotel.chain.app.roles.User;
 
@@ -350,4 +347,6 @@ public class AdminDBHandler extends DBConfigs {
 
         return employee;
     }
+
+
 }
