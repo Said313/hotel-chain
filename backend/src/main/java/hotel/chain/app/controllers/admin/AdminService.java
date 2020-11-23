@@ -5,6 +5,7 @@ import hotel.chain.app.controllers.profile.ProfileEditRequest;
 import hotel.chain.app.database.AdminDBHandler;
 import hotel.chain.app.database.ProfileDBHandler;
 import hotel.chain.app.entities.Booking;
+import hotel.chain.app.roles.User;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -28,5 +29,18 @@ public class AdminService {
         bookings = db.getAllBookings();
         return Response.ok(new Gson().toJson(bookings)).build();
     }
+
+    @POST
+    @Path("/users")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllUsers(String request) {
+
+        AdminDBHandler db = new AdminDBHandler();
+        ArrayList<User> users = new ArrayList<>();
+        users = db.getAllUsers();
+        return Response.ok(new Gson().toJson(users)).build();
+    }
+
 
 }

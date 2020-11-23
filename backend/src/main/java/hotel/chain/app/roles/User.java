@@ -25,7 +25,6 @@ public class User {
 
     public User(String firstname, String lastname, String login, String password, Id_type id_type,
                 String id_number, String address, String mobile_phone, String home_phone, UserType type){
-        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.login = login;

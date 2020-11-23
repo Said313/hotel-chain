@@ -1,5 +1,8 @@
 package hotel.chain.app.database;
 
+import hotel.chain.app.constants.authorization.Id_type;
+import hotel.chain.app.constants.authorization.UserType;
+import hotel.chain.app.constants.authorization.UsersTableColumns;
 import hotel.chain.app.constants.bookings.AdditionalServicesTableColumns;
 import hotel.chain.app.constants.bookings.BookingsHaveAdditionalServicesTable;
 import hotel.chain.app.constants.bookings.BookingsTableColumns;
@@ -7,6 +10,7 @@ import hotel.chain.app.constants.bookings.SeasonsTableColumns;
 import hotel.chain.app.entities.AdditionalService;
 import hotel.chain.app.entities.Booking;
 import hotel.chain.app.entities.Season;
+import hotel.chain.app.roles.User;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
@@ -142,4 +146,45 @@ public class AdminDBHandler extends DBConfigs {
         return bookings;
     }
 
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> users = new ArrayList<>();
+
+        String sqlUsers = "SELECT * FROM " + UsersTableColumns.TABLE_NAME;
+
+        PreparedStatement psUsers = null;
+        ResultSet rsUsers = null;
+
+        try {
+            psUsers = dbConnection.prepareStatement(sqlUsers);
+            rsUsers = psUsers.executeQuery();
+
+            while (rsUsers.next()) {
+                User user = new User(
+                    rsUsers.getInt(UsersTableColumns.ID),
+                        rsUsers.getString(UsersTableColumns.FIRSTNAME),
+                        rsUsers.getString(UsersTableColumns.LASTNAME),
+                        rsUsers.getString(UsersTableColumns.LOGIN),
+                        rsUsers.getString(UsersTableColumns.PASSWORD),
+                        Id_type.getById(rsUsers.getInt(UsersTableColumns.ID_TYPE)),
+                        rsUsers.getString(UsersTableColumns.ID_NUMBER),
+                        rsUsers.getString(UsersTableColumns.ADDRESS),
+                        rsUsers.getString(UsersTableColumns.MOBILE_PHONE),
+                        rsUsers.getString(UsersTableColumns.HOME_PHONE),
+                        UserType.getById(rsUsers.getInt(UsersTableColumns.TYPE))
+                );
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rsUsers!=null) {rsUsers.close();}
+                if (psUsers!=null) {psUsers.close();}
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return users;
+    }
 }
