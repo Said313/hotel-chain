@@ -1,0 +1,33 @@
+.Hotel {
+    width: 100vw;
+    padding: 0px 50px;
+    margin-top: 80px;
+    padding: 50px;
+}
+
+.roomType {
+    margin: 30px 0px;
+    display: flex;
+}
+
+.roomType>div {
+    flex: 1;
+}
+
+.roomDemandInput {
+    font-size: 1rem;
+    margin-left: 20px;
+    padding: 5px 10px;
+}
+
+.profileBookings {
+    width: 100vw;
+    min-height: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 50px;
+}
+
+.profileBookingTitle {
+    margin: 50px 0px 20px 0px;
+}

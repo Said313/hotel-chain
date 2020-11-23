@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import HotelCard from '../../components/HotelCard';
 
 const QueryResults = () => {
     const hotelsList = useSelector(state => state.hotelsList);
@@ -7,8 +8,8 @@ const QueryResults = () => {
     return (
         <div className="QueryResults">
             <h3>Hotels Available</h3>
-            {hotelsList.forEach(hotel => {
-                return <p>{hotel.name}</p>
+            {hotelsList.map(hotel => {
+                return <HotelCard key={hotel.id} hotel={hotel}/>
             })}
         </div>
     );

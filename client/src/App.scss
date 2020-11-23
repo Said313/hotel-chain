@@ -1,0 +1,238 @@
+@import './scss/colors.scss';
+
+.App {
+  width: 100vw;
+  min-height: 100vh;
+  font-size: 20px;
+  position: relative;
+}
+
+.navigation {
+  font-size: 1.5rem;
+  height: 80px;
+  width: 100vw;
+  position: fixed;
+  background: rgba($color: $first, $alpha: 0.7);
+  box-shadow: 0px 0px 10px rgba($color: black, $alpha: 0.6);
+  top: 0;
+}
+
+.navigation, .navLoggedIn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navLoggedIn {}
+
+.navigation>ul{
+  list-style: none;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.navigation>div {
+  margin-right: 20px;
+}
+
+.navigation>ul>li{
+  padding: 20px;
+}
+
+.navigation>ul>li>a{
+  text-decoration: none;
+}
+
+.navigation>ul>li>a:visited{
+  color: $fourth;
+}
+
+.validError{
+  font-size: small;
+  color: red;
+}
+
+.Signup form div label {
+  width: 30vw;
+}
+
+.Signup form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Signup, .Login {
+  margin: 20px 0px;
+}
+
+.Signup h3 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 2rem;
+}
+
+.Login div h3 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.Login div form {
+  display: grid;
+  place-content: center;
+  place-items: center;
+}
+
+.signInput, .loginInput, .dest {
+  padding: 10px 15px;
+  font-size: 1.2rem;
+  border-width: 0px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  color: #000000;
+  border-style: solid;
+  border-radius: 12px;
+  box-shadow: 0px 0px 12px rgba(66,66,66,.50);
+  margin: 5px 0px;
+}
+
+.navButton, .signupButton, .loginButton, .findHotelsButton, .button {
+  font-size: 1.2rem;
+  padding: 10px 15px;
+  margin: 0px 5px;
+  border-radius: 10px;
+  border: 0px;
+  color: white;
+  cursor: pointer;
+  background-color: $fourth;
+}
+
+.signIdType {
+  margin: 15px 0px;
+}
+
+.signIdType select {
+  font-size: 1.2rem;
+}
+
+.signCategory {
+  margin: 20px 0px;
+}
+
+#category label {
+  margin-right: 10px;
+  line-height: 40px;
+}
+
+.loginButton, .findHotelsButton {
+  margin: 10px 0px;
+}
+
+.toSignupText{
+  margin: 10px 0px;
+}
+
+.Booking, .Profile, .Home, .QueryResults, .Login, .Signup {
+  margin-top: 80px;
+}
+
+.Booking, .Profile, .Home, .Login, .Signup {
+  padding-top: 50px;
+  text-align: center;
+}
+
+.QueryResults {
+  padding: 20px 50px 0px 50px;
+  width: 100vw;
+  &>h3{
+    text-align: center;
+  }
+}
+
+.Booking form label {
+  margin-left: 20px;
+}
+
+.dest {
+  margin: 10px;
+}
+
+.bookingDate {
+  margin: 10px;
+  padding: 5px;
+}
+
+.userIcon {
+  color: $fourth;
+  font-size: 1.5rem;
+  margin-right: 15px; 
+}
+
+.userProfileIcon {
+  color: $fourth;
+  margin: 20px 0px; 
+  font-size: 100px;
+}
+
+.Home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 200vh;
+  background: #FFFFFF url('./resources/mainBack.jpg') no-repeat right top;
+  background-size: 100vw 100vh;
+}
+
+.Home::before{
+  content: '';
+  background: rgba($color: #FFFFFF, $alpha: 0.7);
+}
+
+.HomeMain {
+  display: flex;
+  flex-direction: column;
+  padding: 180px 100px;
+  background: rgba($color: #FFFFFF, $alpha: 0.8);
+}
+
+.HomeSecond {
+  display: flex;
+  margin-top: 150px;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  padding: 180px 100px;
+  background: #FFFFFF url('./resources/homeSecond.jpg') no-repeat right top;
+  background-size: 100vw 100vh;
+  position: relative;
+}
+
+.justBack {
+  background: rgba($color: #FFFFFF, $alpha: 0.7);
+  width: calc(100vw - 200px);
+  height: calc(100vh - 360px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 0px;
+}
+
+.homeMainText {
+  color: black;
+}
+
+.homeText {
+  margin: 20px 0px;
+  max-width: 70vw;
+  line-height: 2.5rem;
+}
+
+.homeWelcome {
+  color: $fourth;
+  font-size: 2rem;
+  margin: 20px 0px 0px 0px;
+}

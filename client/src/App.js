@@ -6,10 +6,11 @@ import Signup from './routes/Auth/Signup';
 import Navigation from './components/Navigation/Navigation';
 import Profile from './routes/Profile/Profile';
 import Booking from './routes/Booking/Booking';
+import Hotel from './routes/Booking/Hotel';
 import QueryResults from './routes/Booking/QueryResults';
 import { connect } from 'react-redux';
 
-import './App.css';
+import './App.scss';
 
 class App extends Component {
 
@@ -31,6 +32,9 @@ class App extends Component {
             </Route>
             <Route exact path="/booking/hotels">
               <QueryResults />
+            </Route>
+            <Route exact path="/booking/:id">
+              <Hotel />
             </Route>
             <Route exact path="/profile">
               <Profile />

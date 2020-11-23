@@ -18,6 +18,7 @@ const Signup = () => {
     const handleLogin = ({target}) => {
         axios.post(`${serverPath}/services/auth/checkLogin`, {
             login: target.value,
+            password: "",
         })
             .then(res => {
                 setValidLogin(!res.data);
@@ -42,6 +43,8 @@ const Signup = () => {
                 mobile_phone: formData.mobilePhone,
                 home_phone: formData.homePhone,
                 category: formData.category,
+                hotel_id: 0,
+                user_type: "guest",
               })
               .then(res => {
                 window.alert("You are signed up successfully!");
@@ -145,8 +148,8 @@ const Signup = () => {
                         ref={register({required: true})}
                     >
                         <option value=""></option>
-                        <option value="us_passport">US passport</option>
-                        <option value="driving_license">Driving license</option>
+                        <option value="US passport">US passport</option>
+                        <option value="Driving license">Driving license</option>
                     </select>
                     
                 </div>
@@ -201,15 +204,23 @@ const Signup = () => {
                         <input 
                             type="radio" 
                             id="cat_military"
-                            value="military"
+                            value="Military"
                             ref={register}
                             name="category"
                         />
                         <label htmlFor="cat_military">Military</label>
                         <input 
+                            type="radio" 
+                            id="cat_government"
+                            value="Government"
+                            ref={register}
+                            name="category"
+                        />
+                        <label htmlFor="cat_government">Government</label>
+                        <input 
                             type="radio"
                             id="cat_vip"
-                            value="vip"
+                            value="VIP"
                             ref={register}
                             name="category"
                         />
